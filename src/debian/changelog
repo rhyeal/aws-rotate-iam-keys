@@ -1,10 +1,28 @@
-aws-rotate-iam-keys (0.1.1) stable; urgency=medium
+aws-rotate-iam-keys (0.1.4) bionic; urgency=medium
+
+  * Update Section to utils
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:35:51 -0800
+
+aws-rotate-iam-keys (0.1.3) bionic; urgency=medium
+
+  * Remove all distroseries
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:30:52 -0800
+
+aws-rotate-iam-keys (0.1.2) ; urgency=medium
+
+  * Change distroseries to unstable?
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:27:35 -0800
+
+aws-rotate-iam-keys (0.1.1) ; urgency=medium
 
   * Refactor package files and re-upload.
 
  -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:07:52 -0800
 
-aws-rotate-iam-keys (0.1) stable; urgency=low
+aws-rotate-iam-keys (0.1) ; urgency=low
 
   * Initial release.
 
