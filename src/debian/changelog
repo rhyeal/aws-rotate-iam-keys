@@ -1,3 +1,27 @@
+aws-rotate-iam-keys (0.1.6ubuntu2) bionic; urgency=medium
+
+  * Make command works now
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:19:04 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu1) bionic; urgency=medium
+
+  * Update makefile?
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:15:28 -0800
+
+aws-rotate-iam-keys (0.1.6) bionic; urgency=medium
+
+  * Changing around where stuff is in debian/control
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:01:40 -0800
+
+aws-rotate-iam-keys (0.1.5) bionic; urgency=medium
+
+  * Adding a clean command with exit 0
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:47:59 -0800
+
 aws-rotate-iam-keys (0.1.4) bionic; urgency=medium
 
   * Update Section to utils

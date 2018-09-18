@@ -1,2 +1,5 @@
-install: aws-rotate-iam-keys
-	install -m 0755 aws-rotate-iam-keys /usr/bin
+install:
+	install -m 0755 bin/aws-rotate-iam-keys /usr/bin
+
+clean:
+	exit 0

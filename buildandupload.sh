@@ -2,7 +2,7 @@
 VERSION="aws-rotate-iam-keys_$1_source.changes"
 
 cd src
-dch -i
+dch -i --distribution bionic --force-distribution
 
 debuild -S -sa
 cd ..
