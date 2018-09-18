@@ -1,9 +1,9 @@
 Source: aws-rotate-iam-keys
 Maintainer: Adam Link <aws-rotate-iam-keys@rhyeal.com>
-Version: 0.1
+Version: 0.1.1
 
 Package: aws-rotate-iam-keys
-Standards-Version: 0.1
+Standards-Version: 0.1.1
 Architecture: all
 Depends: bash, jq, awscli
 Section: unknown

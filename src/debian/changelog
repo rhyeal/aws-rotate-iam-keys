@@ -1,0 +1,11 @@
+aws-rotate-iam-keys (0.1.1) stable; urgency=medium
+
+  * Refactor package files and re-upload.
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 14:07:52 -0800
+
+aws-rotate-iam-keys (0.1) stable; urgency=low
+
+  * Initial release.
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 13:28:28 -0800
