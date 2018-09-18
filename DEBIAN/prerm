@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+crontab -u $(logname) -l | grep -v '/usr/bin/aws-rotate-iam-keys --profile default'  | crontab -u $(logname) -

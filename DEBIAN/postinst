@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+line="$((RANDOM%60)) 2 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily"
+(crontab -u $(logname) -l; echo "$line" ) | crontab -u $(logname) -

@@ -1,0 +1,13 @@
+Package: aws-rotate-iam-keys
+Version: 0.1
+Architecture: all
+Maintainer: rhyeal
+Depends: bash, jq, awscli
+Section: unknown
+Priority: optional
+Homepage: https://github.com/rhyeal/aws-rotate-iam-keys
+Description: Get secure with automatic IAM key rotation
+ Easily schedule the rotation of your AWS IAM keys for any profile on your
+ system. Simply install the program and it will rotate your default IAM key
+ nightly. Open crontab to modify and add additional profiles to rotate
+ on a schedule.
