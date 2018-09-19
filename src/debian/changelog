@@ -1,3 +1,39 @@
+aws-rotate-iam-keys (0.1.6ubuntu8) bionic; urgency=medium
+
+  * $DESTDIR??
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 16:21:24 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu7) bionic; urgency=medium
+
+  * Blank no-op
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 16:16:29 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu6) bionic; urgency=medium
+
+  * Try this again
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:59:28 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu5) bionic; urgency=medium
+
+  * Sudo baby
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:54:54 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu4) bionic; urgency=medium
+
+  * Change to usr/local/bin
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:44:23 -0800
+
+aws-rotate-iam-keys (0.1.6ubuntu3) bionic; urgency=medium
+
+  * And default to pass the build. WTF.
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 18 Sep 2018 15:26:47 -0800
+
 aws-rotate-iam-keys (0.1.6ubuntu2) bionic; urgency=medium
 
   * Make command works now

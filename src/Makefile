@@ -1,5 +1,7 @@
+all:
+
 install:
-	install -m 0755 bin/aws-rotate-iam-keys /usr/bin
+	install -D -m0755 bin/aws-rotate-iam-keys $(DESTDIR)/usr/bin/aws-rotate-iam-keys
 
 clean:
 	exit 0
