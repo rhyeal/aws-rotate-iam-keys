@@ -18,8 +18,6 @@ fi
 set -f                      # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
 FIRST_PROFILE=${PROFILES_ARR[0]}
-echo $FIRST_PROFILE
-echo $PROFILES
 
 CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq '.AccessKeyMetadata[0].AccessKeyId' | tr -d '"')
 
