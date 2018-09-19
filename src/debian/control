@@ -1,6 +1,6 @@
 Source: aws-rotate-iam-keys
 Maintainer: Adam Link <aws-rotate-iam-keys@rhyeal.com>
-Standards-Version: 0.1.6
+Standards-Version: 0.2
 Section: utils
 Build-Depends: dh-make, debhelper (>= 9)
 Vcs-Git: https://github.com/rhyeal/aws-rotate-iam-keys

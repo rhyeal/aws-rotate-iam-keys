@@ -1,3 +1,10 @@
+aws-rotate-iam-keys (0.2) bionic; urgency=medium
+
+  * Array of profiles added
+  * Crontab now works
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Wed, 19 Sep 2018 09:19:35 -0800
+
 aws-rotate-iam-keys (0.1.6ubuntu8) bionic; urgency=medium
 
   * $DESTDIR??
