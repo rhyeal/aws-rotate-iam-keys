@@ -7,3 +7,6 @@ DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" dc
 DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa
 cd ..
 dput ppa:rhyeal/aws-rotate-iam-keys $VERSION
+
+# make the homebrew zip file
+zip -r aws-rotate-iam-keys_$VERSION src
