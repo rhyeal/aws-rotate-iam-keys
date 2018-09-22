@@ -1,3 +1,15 @@
+aws-rotate-iam-keys (0.2.3) bionic; urgency=medium
+
+  * Testing new build script
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 21 Sep 2018 16:02:03 -0800
+
+aws-rotate-iam-keys (0.2.2) bionic; urgency=medium
+
+  * Update the version to test multi-platform builds
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 21 Sep 2018 14:33:55 -0800
+
 aws-rotate-iam-keys (0.2.1) bionic; urgency=medium
 
   * Added version information for Homebrew testing

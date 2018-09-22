@@ -15,11 +15,16 @@ sudo apt-get install aws-rotate-iam-keys
 ### MacOS
 
 ```
+brew tap rhyeal/aws-rotate-iam-keys https://github.com/rhyeal/aws-rotate-iam-keys
 brew install aws-rotate-iam-keys
 ```
-Requires [Homebrew](https://brew.sh/) to install.
+Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in Homebrew Core soon!
 
 ### Other Linux
+
+```
+
+```
 
 ### Windows
 
@@ -39,5 +44,5 @@ via the package managers selected to create their own cron schedules.
 ### Windows
 
 ## On the Web!
-Visit us on the web at aws-rotate-iam-keys.com for full installation instructions
+Visit us on the web at [aws-rotate-iam-keys.com](https://aws-rotate-iam-keys.com) for full installation instructions
 in a snazzy single-page UI. It's basically this README with some colors.

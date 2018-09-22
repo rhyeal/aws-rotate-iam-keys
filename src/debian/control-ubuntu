@@ -1,13 +1,13 @@
 Source: aws-rotate-iam-keys
 Maintainer: Adam Link <aws-rotate-iam-keys@rhyeal.com>
-Standards-Version: 0.2
+Standards-Version: ${VERSION}
 Section: utils
 Build-Depends: dh-make, debhelper (>= 9)
 Vcs-Git: https://github.com/rhyeal/aws-rotate-iam-keys
 
 Package: aws-rotate-iam-keys
 Architecture: all
-Depends: bash, jq, awscli
+Depends: awscli, bash, jq
 Priority: optional
 Homepage: https://github.com/rhyeal/aws-rotate-iam-keys
 Description: Get secure with automatic IAM key rotation
