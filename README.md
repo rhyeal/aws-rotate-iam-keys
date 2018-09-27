@@ -25,8 +25,10 @@ Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in 
 ### Other Linux
 
 ```
-wget
-deb -i
+wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.2.3.deb -o aws-rotate-iam-keys.deb
+sudo dpkg -i aws-rotate-iam-keys.deb
+sudo apt-get install -f
+rm aws-rotate-iam-keys.deb # optional file clean up
 ```
 
 ### Windows
@@ -149,7 +151,10 @@ Load up the launchd job with
 launchctl load -F ~/Library/LaunchAgents/com.aws.rotate.iam.keys.plist
 ```
 
-You can check that everything worked by running: `launchctl start com.aws.rotate.iam.keys`
+You can check that everything worked by running:
+```
+launchctl start com.aws.rotate.iam.keys
+```
 
 That's it. Now your keys will be rotated every day for you.
 
