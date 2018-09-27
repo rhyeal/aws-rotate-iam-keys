@@ -44,7 +44,7 @@ AWS Rotate IAM Keys is simple and powerful. There aren't too many features other
 
 ## Documentation
 
-To rotate your default profile manually:
+#### To rotate your default profile manually:
 
 ```
 $ aws-rotate-iam-keys
@@ -54,14 +54,14 @@ Made new key AKIAIOSFODNN7EXAMPLE
 Key rotated
 ```
 
-To rotate a specific profile in your `~/.aws/credentials` file:
+#### To rotate a specific profile in your `~/.aws/credentials` file:
 
 ```
 $ aws-rotate-iam-keys --profile myProfile
 $ aws-rotate-iam-keys -p myProfile
 ```
 
-To rotate multiple profiles *with the same key*:
+#### To rotate multiple profiles *with the same key*:
 
 ```
 $ aws-rotate-iam-keys --profiles myProfile,myOtherProfile
@@ -69,7 +69,7 @@ $ aws-rotate-iam-keys --profiles myProfile,myOtherProfile
 
 The result of the above script is that both `myProfile` and `myOtherProfile` will have the **same access and secret keys** in your `~/.aws/credentials` file.
 
-To rotate multiple profiles with their own keys:
+#### To rotate multiple profiles *with their own keys*:
 
 ```
 $ aws-rotate-iam-keys --profile myProfile
@@ -85,9 +85,73 @@ via the package managers selected to create their own cron schedules.
 
 ### MacOS
 
-MacOS does not allow programs to modify the crontab when installing via Homebrew. Unfortunately, this means that MacOS users will need to copy/paste a cron job into their crontab. Here's how to do that:
+MacOS does not allow programs to modify the crontab when installing via Homebrew. Unfortunately, this means that MacOS users will need to manually finish installation to automate AWS Rotate IAM Keys. Here's how to do that:
 
+#### Using a cron job (easiest)
 
+Open your crontab by typing:
+
+```
+EDITOR=nano crontab -e
+```
+
+Copy and paste the following line into the end of the crontab file:
+
+```
+33 4 * * * /usr/local/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+```
+
+Save your crontab with `Ctrl` + `O` and then press `[Enter]`. Exit and apply changes with `Ctrl` + `X`. That's it!
+
+#### Using launchd (MacOS recommended)
+
+[Launchd](http://www.launchd.info/) is the MacOS replacement for cron.
+
+Open a Terminal and cd into the Launch Agents directory. Make the plist file and open your text editor.
+
+```
+cd ~/Library/LaunchAgents
+touch com.aws.rotate.iam.keys.plist
+nano com.aws.rotate.iam.keys.plist
+```
+
+Copy and paste the following into your text editor:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+        <string>com.aws.rotate.iam.keys</string>
+    <key>ProgramArguments</key>
+        <array>
+            <string>/usr/local/bin/aws-rotate-iam-keys</string>
+            <string>--profile</string>
+            <string>default</string>
+        </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>23</integer>
+    </dict>
+</dict>
+</plist>
+```
+
+Save the file with `Ctrl` + `O` and then press `[Enter]`. Exit with `Ctrl` + `X`.
+
+Load up the launchd job with
+```
+launchctl load -F ~/Library/LaunchAgents/com.aws.rotate.iam.keys.plist
+```
+
+You can check that everything worked by running: `launchctl start com.aws.rotate.iam.keys`
+
+That's it. Now your keys will be rotated every day for you.
 
 ### Windows
 
