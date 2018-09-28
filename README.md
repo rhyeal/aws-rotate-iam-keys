@@ -121,27 +121,32 @@ Copy and paste the following into your text editor:
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Label</key>
-        <string>com.aws.rotate.iam.keys</string>
-    <key>ProgramArguments</key>
-        <array>
-            <string>/usr/local/bin/aws-rotate-iam-keys</string>
-            <string>--profile</string>
-            <string>default</string>
-        </array>
-    <key>StartCalendarInterval</key>
-    <dict>
-        <key>Hour</key>
-        <integer>3</integer>
-        <key>Minute</key>
-        <integer>23</integer>
-    </dict>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<key>Label</key>
+	<string>com.aws.rotate.iam.keys</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/local/bin/aws-rotate-iam-keys</string>
+		<string>--profile</string>
+		<string>default</string>
+	</array>
+	<key>StartCalendarInterval</key>
+	<dict>
+		<key>Hour</key>
+		<integer>3</integer>
+		<key>Minute</key>
+		<integer>23</integer>
+	</dict>
 </dict>
 </plist>
+
 ```
 
 Save the file with `Ctrl` + `O` and then press `[Enter]`. Exit with `Ctrl` + `X`.

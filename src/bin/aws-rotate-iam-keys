@@ -31,7 +31,7 @@ echo "Making new access key"
 RESPONSE=$(aws iam create-access-key --profile $FIRST_PROFILE | jq .AccessKey)
 ACCESS_KEY=$(echo $RESPONSE | jq '.AccessKeyId' | tr -d '"')
 SECRET=$(echo $RESPONSE | jq '.SecretAccessKey' | tr -d '"')
-aws iam delete-access-key --access-key-id $CURRENT_KEY_ID
+aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[i]}
 
 # Rotate the keys in the credentials file for all profiles
 for i in "${!PROFILES_ARR[@]}"
