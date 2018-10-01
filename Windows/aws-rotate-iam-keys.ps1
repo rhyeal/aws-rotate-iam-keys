@@ -70,15 +70,23 @@ AppData\Local\AWSToolkit\RegisteredAccounts.json
 # Set the profile used and default to default
 Set-AWSCredential -ProfileName $arr[0]
 
-# The location for the plain text credentials
+$current_key = Get-AWSCredential -ProfileName $arr[0]
+
 $location = "C:\Users\$($env:UserName)\.aws\credentials"
-Write-Output $location
 
-# Get the current key
-# Make a new key
-# Delete the old key
-# Rotate the key for all profiles listed
+#Create a new AWS Key
+$new_key = New-IAMAccessKey -ProfileName $arr[0]
+Write-Output "Making new access key"
 
+#Delete the AWS Key
+Remove-IAMAccessKey -Force -AccessKeyId $current_key.GetCredentials().AccessKey -ProfileName $arr[0] -Confirm:$false
 
-#Set-AWSCredential -ProfileLocation $location -ProfileName basic_profile
-#Set-AWSCredential -AccessKey asdf -SecretKey asdf -StoreAs default
+#Update the other profiles with the new key
+foreach ($profile in $arr) {
+    Write-Output "Updating profile: $($profile)"
+    Set-AWSCredential -ProfileLocation $location -StoreAs $profile -AccessKey $new_key.AccessKeyId -SecretKey $new_key.SecretAccessKey
+    Set-AWSCredential -StoreAs $profile -AccessKey $new_key.AccessKeyId -SecretKey $new_key.SecretAccessKey
+}
+
+Write-Output "Made new key $($new_key.AccessKeyId)"
+Write-Output "Key rotated"
