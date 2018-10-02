@@ -177,6 +177,14 @@ in a snazzy single-page UI. It's basically this README with some colors.
 
 ## Checksums
 
-Linux: `echo cab53cd0a4241ae164b42e497d3f935d aws-rotate-iam-keys.0.2.4.deb| md5sum --check -`
-MacOS: `SHA256 0c9afe5d9e3f7778b4add15126302bbf78939009bd71812920bfeb72b444303f` (Homebrew gets the release zip of the entire repo)
-Windows: PowerShell script file `MD5 7b78cc773ac69f55dba4caca4de6b437`
+### Linux
+```
+echo cab53cd0a4241ae164b42e497d3f935d aws-rotate-iam-keys.0.2.4.deb| md5sum --check -
+```
+### MacOS
+
+Homebrew gets the release zip of the entire repo
+`SHA256 0c9afe5d9e3f7778b4add15126302bbf78939009bd71812920bfeb72b444303f`
+
+### Windows
+PowerShell script file `MD5 7b78cc773ac69f55dba4caca4de6b437`
