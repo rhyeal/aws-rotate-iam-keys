@@ -1,8 +1,8 @@
 class AwsRotateIamKeys < Formula
   desc "Automatically set up a cron job to rotate your IAM keys"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.2.1.tar.gz"
-  sha256 "50874810121eb85457a21f7785f47888f4a44975cd80392b312e7f675b40e1f3"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.2.4.tar.gz"
+  sha256 "0c9afe5d9e3f7778b4add15126302bbf78939009bd71812920bfeb72b444303f"
   depends_on "awscli"
   depends_on "jq"
 
