@@ -25,7 +25,7 @@ Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in 
 ### Other Linux
 
 ```
-wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.2.3.deb -o aws-rotate-iam-keys.deb
+wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.2.4.deb -o aws-rotate-iam-keys.deb
 sudo dpkg -i aws-rotate-iam-keys.deb
 sudo apt-get install -f
 rm aws-rotate-iam-keys.deb # optional file clean up
@@ -168,6 +168,8 @@ That's it. Now your keys will be rotated every day for you.
 ### Windows
 
 AWS Rotate IAM Keys is set up to automatically schedule a task for you upon first run. If you want to edit the profiles that are being updated, you need to modify the task using [Task Scheduler](https://docs.microsoft.com/en-us/windows/desktop/taskschd/task-scheduler-start-page). Look for a task named "AWS Rotate IAM Keys" and modify the `-profile` parameter from `default` to a comma-separated list of your profile names.
+
+If you move the .ps1 script from the initial location where you first ran it, you will need to modify the path in the task to point to the correct script location.
 
 ## On the Web!
 Visit us on the web at [aws-rotate-iam-keys.com](https://aws-rotate-iam-keys.com) for full installation instructions
