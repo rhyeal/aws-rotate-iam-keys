@@ -33,7 +33,9 @@ rm aws-rotate-iam-keys.deb # optional file clean up
 
 ### Windows
 
-[Click here](#) to download the executable installer.
+[Click here](https://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1) to download the executable PowerShell script.
+
+Simply place this in any directory and then run it. It will install the Scheduled Task to rotate your keys nightly upon first run and will rotate your keys on each run thereafter.
 
 ## Features
 
@@ -164,6 +166,8 @@ launchctl start com.aws.rotate.iam.keys
 That's it. Now your keys will be rotated every day for you.
 
 ### Windows
+
+AWS Rotate IAM Keys is set up to automatically schedule a task for you upon first run. If you want to edit the profiles that are being updated, you need to modify the task using [Task Scheduler](https://docs.microsoft.com/en-us/windows/desktop/taskschd/task-scheduler-start-page). Look for a task named "AWS Rotate IAM Keys" and modify the `-profile` parameter from `default` to a comma-separated list of your profile names.
 
 ## On the Web!
 Visit us on the web at [aws-rotate-iam-keys.com](https://aws-rotate-iam-keys.com) for full installation instructions
