@@ -179,7 +179,7 @@ in a snazzy single-page UI. It's basically this README with some colors.
 
 ### Linux
 ```
-echo cab53cd0a4241ae164b42e497d3f935d aws-rotate-iam-keys.0.2.4.deb | md5sum --check -
+echo 17c60b898e1d0dc7fe6451c30baa5a98 aws-rotate-iam-keys.0.2.5.deb | md5sum --check -
 ```
 ### MacOS
 
