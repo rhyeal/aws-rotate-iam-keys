@@ -24,7 +24,7 @@ set -f                      # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
 FIRST_PROFILE=${PROFILES_ARR[0]}
 
-CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq '.AccessKeyMetadata[0].AccessKeyId' | tr -d '"')
+CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq '.AccessKeyMetadata[0].AccessKeyId' | tr -d '"' || exit 1)
 
 # Make a new key
 echo "Making new access key"
