@@ -179,11 +179,11 @@ in a snazzy single-page UI. It's basically this README with some colors.
 
 ### Linux
 ```
-echo 693546930ba41559f4391731988ffa04 aws-rotate-iam-keys.0.3.1.deb | md5sum --check -
+echo 9aafed183faaf507c925c31552d63009 aws-rotate-iam-keys.0.3.1.deb | md5sum --check -
 ```
 ### MacOS
 
-Homebrew gets the release zip of the entire repo: `SHA256 969d530b29f8a6264de0df98a0276629f4cb4d843dfd5c05f7b81d7576156ec9`
+Homebrew gets the release zip of the entire repo: `SHA256 2bbc39e9783907451d8ce1eaba93dc6775ad6797221122ec96ec671f23f6344f`
 
 ### Windows
 PowerShell script file: `MD5 7b78cc773ac69f55dba4caca4de6b437`
