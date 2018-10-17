@@ -24,8 +24,9 @@ elif [[ "$USER" != "root" && "$USER" != "" ]]; then
 elif [[ "$SUDO_USER" != "root" && "$SUDO_USER" != "" ]]; then
         MY_USER=$SUDO_USER
 else
-  echo "Cannot find the username! Panicking and exiting..."
-  exit 1
+  echo "Cannot find the username! Skipping the crontab removal"
 fi
 
-crontab -u $MY_USER -l | grep -v '/usr/bin/aws-rotate-iam-keys --profile default'  | crontab -u $MY_USER -
+if [[ "$MY_USER" != "" ]]; then # if this is being run as a user, remove this line from cron tab
+  crontab -u $MY_USER -l | grep -v '/usr/bin/aws-rotate-iam-keys --profile default'  | crontab -u $MY_USER -
+fi

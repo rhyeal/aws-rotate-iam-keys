@@ -1,3 +1,9 @@
+aws-rotate-iam-keys (0.3.1) bionic; urgency=medium
+
+  * Adding more conditions around debian scripts
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Wed, 17 Oct 2018 13:32:45 -0800
+
 aws-rotate-iam-keys (0.3) bionic; urgency=medium
 
   * New exit condition on invalid keys
