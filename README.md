@@ -183,7 +183,7 @@ echo 97e25aa3005056b72eb6d4178ae412f4 aws-rotate-iam-keys.0.3.2.deb | md5sum --c
 ```
 ### MacOS
 
-Homebrew gets the release zip of the entire repo: `SHA256 2bbc39e9783907451d8ce1eaba93dc6775ad6797221122ec96ec671f23f6344f`
+Homebrew gets the release zip of the entire repo: `SHA256 5ae32ec0da4f07b2286cbc592edec0dd3eefcb870494ee221b71efca2bb48a44`
 
 ### Windows
 PowerShell script file: `MD5 7b78cc773ac69f55dba4caca4de6b437  Windows/aws-rotate-iam-keys.ps1`
