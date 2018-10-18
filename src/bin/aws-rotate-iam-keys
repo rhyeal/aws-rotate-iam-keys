@@ -9,7 +9,7 @@ case $arg in
     ;;
     --version)
     echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
-    echo "version 0.2.5"
+    echo "version ${VERSION}"
     exit 0
     ;;
 esac
