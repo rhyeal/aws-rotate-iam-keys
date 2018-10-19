@@ -1,3 +1,10 @@
+aws-rotate-iam-keys (0.4.1) bionic; urgency=medium
+
+  * Fix a bug in parsing input
+  * Dont sent up a 2nd cron job if at least one exists
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 19 Oct 2018 09:05:20 -0800
+
 aws-rotate-iam-keys (0.3.1) bionic; urgency=medium
 
   * Adding more conditions around debian scripts

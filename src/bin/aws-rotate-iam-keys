@@ -3,7 +3,7 @@
 # Assign the arguments to variables
 for arg in "$@"
 do
-case $arg in
+case "$arg" in
     -p|--profiles|--profile)
     PROFILES="$2"
     ;;
