@@ -39,6 +39,7 @@ envsubst < debian/control-ubuntu > debian/control
 DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa
 cd ..
 dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
+cp dist/debian/changelog src/debian/changelog
 rm -rf dist
 
 # update the readme
