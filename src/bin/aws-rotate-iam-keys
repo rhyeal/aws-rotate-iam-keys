@@ -7,9 +7,26 @@ case $arg in
     -p|--profiles|--profile)
     PROFILES="$2"
     ;;
-    --version)
+    --version|-v)
     echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
     echo "version ${VERSION}"
+    exit 0
+    ;;
+    --help)
+    echo '''
+    To rotate your default profile manually:
+    $ aws-rotate-iam-keys
+
+    To rotate a specific profile in your `~/.aws/credentials` file:
+    $ aws-rotate-iam-keys --profile myProfile
+
+    To rotate multiple profiles *with the same key*:
+    $ aws-rotate-iam-keys --profiles myProfile,myOtherProfile
+
+    To rotate multiple profiles *with their own keys*:
+    $ aws-rotate-iam-keys --profile myProfile
+    $ aws-rotate-iam-keys --profile myOtherProfile
+    '''
     exit 0
     ;;
 esac

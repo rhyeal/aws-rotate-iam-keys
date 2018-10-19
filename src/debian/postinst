@@ -22,8 +22,7 @@ elif [[ "$USER" != "root" && "$USER" != "" ]]; then
 elif [[ "$SUDO_USER" != "root" && "$SUDO_USER" != "" ]]; then
         MY_USER=$SUDO_USER
 else
-  echo "Cannot find the username! Panicking and exiting..."
-  exit 1
+  echo "Cannot find the username! Skipping the crontab install"
 fi
 
 if [[ "$MY_USER" != "" ]]; then
