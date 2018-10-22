@@ -7,12 +7,12 @@ case "$arg" in
     -p|--profiles|--profile)
     PROFILES="$2"
     ;;
-    --version|-v)
-    echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
-    echo "version ${VERSION}"
-    exit 0
+    --version|-v|version)
+      echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
+      echo "version ${VERSION}"
+      exit 0
     ;;
-    --help)
+    --help|help|-h)
     echo '''
     To rotate your default profile manually:
     $ aws-rotate-iam-keys
@@ -43,21 +43,31 @@ FIRST_PROFILE=${PROFILES_ARR[0]}
 
 CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq '.AccessKeyMetadata[0].AccessKeyId' | tr -d '"' || exit 1)
 
-# Make a new key
-echo "Making new access key"
-RESPONSE=$(aws iam create-access-key --profile $FIRST_PROFILE | jq .AccessKey)
-ACCESS_KEY=$(echo $RESPONSE | jq '.AccessKeyId' | tr -d '"')
-SECRET=$(echo $RESPONSE | jq '.SecretAccessKey' | tr -d '"')
-aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[i]}
+if [[ "$CURRENT_KEY_ID" != "" ]]; then
+  # Make a new key
+  echo "Making new access key"
+  RESPONSE=$(aws iam create-access-key --profile $FIRST_PROFILE | jq .AccessKey)
+  ACCESS_KEY=$(echo $RESPONSE | jq '.AccessKeyId' | tr -d '"')
+  SECRET=$(echo $RESPONSE | jq '.SecretAccessKey' | tr -d '"')
+  if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
+    aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[i]}
 
-# Rotate the keys in the credentials file for all profiles
-for i in "${!PROFILES_ARR[@]}"
-do
-    echo "Updating profile: ${PROFILES_ARR[i]}"
-    aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
-    aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
-done
+    # Rotate the keys in the credentials file for all profiles
+    for i in "${!PROFILES_ARR[@]}"
+    do
+        echo "Updating profile: ${PROFILES_ARR[i]}"
+        aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
+        aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
+    done
 
-echo "Made new key $ACCESS_KEY"
-echo "Key rotated"
-exit 0
+    echo "Made new key $ACCESS_KEY"
+    echo "Key rotated"
+    exit 0
+  else
+    echo "Could not create access key. Ensure you only have 1 active access key in your IAM profile."
+    exit 1
+  fi
+else
+  echo "Could not find current key. Please ensure you have a profile set up using `aws configure`."
+  exit 1
+fi
