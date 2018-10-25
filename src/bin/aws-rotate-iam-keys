@@ -1,39 +1,68 @@
 #!/usr/bin/env bash
 
 # Assign the arguments to variables
-for arg in "$@"
-do
-case "$arg" in
-    -p|--profiles|--profile)
-    PROFILES="$2"
-    ;;
-    --version|-v|version)
-      echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
-      echo "version ${VERSION}"
-      exit 0
-    ;;
-    --help|help|-h)
-    echo '''
-    To rotate your default profile manually:
-    $ aws-rotate-iam-keys
+# saner programming env: these switches turn some bugs into errors
+set -o errexit -o pipefail -o noclobber -o nounset
 
-    To rotate a specific profile in your `~/.aws/credentials` file:
-    $ aws-rotate-iam-keys --profile myProfile
+! getopt --test > /dev/null
+if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
+    echo "I’m sorry, `getopt --test` failed in this environment."
+    exit 1
+fi
 
-    To rotate multiple profiles *with the same key*:
-    $ aws-rotate-iam-keys --profiles myProfile,myOtherProfile
+OPTIONS=hvp:
+LONGOPTS=profile:,profiles:,version,help
 
-    To rotate multiple profiles *with their own keys*:
-    $ aws-rotate-iam-keys --profile myProfile
-    $ aws-rotate-iam-keys --profile myOtherProfile
-    '''
-    exit 0
-    ;;
-esac
+# -use ! and PIPESTATUS to get exit code with errexit set
+# -temporarily store output to be able to check for errors
+# -activate quoting/enhanced mode (e.g. by writing out “--options”)
+# -pass arguments only via   -- "$@"   to separate them correctly
+! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
+    # e.g. return value is 1
+    #  then getopt has complained about wrong arguments to stdout
+    exit 2
+fi
+# read getopt’s output this way to handle the quoting right:
+eval set -- "$PARSED"
+
+PROFILES=""
+# now enjoy the options in order and nicely split until we see --
+while true; do
+    case "$1" in
+        --)
+          shift
+          break
+          ;;
+        -p|--profiles|--profile)
+          PROFILES="$2"
+          shift 2
+        ;;
+        --version|-v)
+          echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
+          echo "version ${VERSION}"
+          exit 0
+        ;;
+        --help|-h)
+          echo "To rotate your default profile manually:"
+          echo '$ aws-rotate-iam-keys'
+          echo ""
+          echo "To rotate a specific profile in your ~/.aws/credentials file:"
+          echo '$ aws-rotate-iam-keys --profile myProfile'
+          echo ""
+          echo "To rotate multiple profiles *with the same key*:"
+          echo '$ aws-rotate-iam-keys --profiles myProfile,myOtherProfile'
+          echo ""
+          echo "To rotate multiple profiles *with their own keys*:"
+          echo '$ aws-rotate-iam-keys --profile myProfile'
+          echo '$ aws-rotate-iam-keys --profile myOtherProfile'
+          exit 0
+        ;;
+    esac
 done
 
 # Set the profile to default if nothing sent via CLI
-if [[ -z "$1" ]]; then
+if [[ -z "$PROFILES" ]]; then
 	PROFILES=default
 fi
 

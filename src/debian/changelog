@@ -1,3 +1,15 @@
+aws-rotate-iam-keys (0.6) bionic; urgency=medium
+
+  * Squashed a bug with parsing no arguments passed
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Thu, 25 Oct 2018 08:54:16 -0800
+
+aws-rotate-iam-keys (0.5.1) bionic; urgency=medium
+
+  * Changing how command line arguments are processed to use getopt
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Thu, 25 Oct 2018 08:46:25 -0800
+
 aws-rotate-iam-keys (0.5) bionic; urgency=medium
 
   * Added error handling for 2 keys errors
