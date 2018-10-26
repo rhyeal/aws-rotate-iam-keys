@@ -25,7 +25,7 @@ Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in 
 ### Other Linux
 
 ```
-wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.6.deb -o aws-rotate-iam-keys.deb
+wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.7.0.deb -o aws-rotate-iam-keys.deb
 sudo dpkg -i aws-rotate-iam-keys.deb
 sudo apt-get install -f
 rm aws-rotate-iam-keys.deb # optional file clean up
@@ -179,7 +179,7 @@ in a snazzy single-page UI. It's basically this README with some colors.
 
 ### Linux
 ```
-echo 0f0cba8d5c09b2e0ed10a2e137e16635 aws-rotate-iam-keys.0.6.deb | md5sum --check -
+echo 8bce994cb2f5b575f0d72680e8c1dc94 aws-rotate-iam-keys.0.7.0.deb | md5sum --check -
 ```
 ### MacOS
 

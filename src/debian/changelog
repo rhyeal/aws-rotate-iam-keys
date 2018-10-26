@@ -1,3 +1,27 @@
+aws-rotate-iam-keys (0.7.0) bionic; urgency=medium
+
+  * Build script was breaking env substitution and input
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 26 Oct 2018 11:41:37 -0800
+
+aws-rotate-iam-keys (0.6.3) bionic; urgency=medium
+
+  * Move where opts and long opts are defined
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 26 Oct 2018 11:29:19 -0800
+
+aws-rotate-iam-keys (0.6.2) bionic; urgency=medium
+
+  * Remove getopt from dependencies
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 26 Oct 2018 11:26:50 -0800
+
+aws-rotate-iam-keys (0.6.1) bionic; urgency=medium
+
+  * Testing the install process
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Fri, 26 Oct 2018 11:25:38 -0800
+
 aws-rotate-iam-keys (0.6) bionic; urgency=medium
 
   * Squashed a bug with parsing no arguments passed

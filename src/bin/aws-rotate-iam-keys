@@ -2,7 +2,8 @@
 
 # Assign the arguments to variables
 # saner programming env: these switches turn some bugs into errors
-set -o errexit -o pipefail -o noclobber -o nounset
+set -eu -o errexit -o pipefail -o noclobber -o nounset
+IFS=$'\n\t'
 
 ! getopt --test > /dev/null
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
@@ -10,14 +11,11 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     exit 1
 fi
 
-OPTIONS=hvp:
-LONGOPTS=profile:,profiles:,version,help
-
 # -use ! and PIPESTATUS to get exit code with errexit set
 # -temporarily store output to be able to check for errors
 # -activate quoting/enhanced mode (e.g. by writing out “--options”)
 # -pass arguments only via   -- "$@"   to separate them correctly
-! PARSED=$(getopt --options=$OPTIONS --longoptions=$LONGOPTS --name "$0" -- "$@")
+! PARSED=$(getopt --options=hvp: --longoptions=profile:,profiles:,version,help --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
     # e.g. return value is 1
     #  then getopt has complained about wrong arguments to stdout
@@ -40,7 +38,7 @@ while true; do
         ;;
         --version|-v)
           echo "AWS Rotate IAM Keys (c) 2018 Adam Link"
-          echo "version ${VERSION}"
+          echo "version <<VERSION>>"
           exit 0
         ;;
         --help|-h)
