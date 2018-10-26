@@ -7,8 +7,8 @@ echo $PROFILE
 
 # version swap the website
 envsubst < website/index.template.html > website/index.html
-#aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read --profile $PROFILE
-#aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read --profile $PROFILE
+aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read --profile $PROFILE
+aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read --profile $PROFILE
 rm website/index.html
 
 # make the dist folder
