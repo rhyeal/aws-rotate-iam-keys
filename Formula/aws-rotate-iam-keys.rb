@@ -13,4 +13,4 @@ class AwsRotateIamKeys < Formula
   test do
     system bin/"aws-rotate-iam-keys", "--version"
   end
-end
+end 

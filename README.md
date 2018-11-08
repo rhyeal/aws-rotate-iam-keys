@@ -187,3 +187,4 @@ Homebrew gets the release zip of the entire repo: `SHA256 1e235141d78013f4c7b3e8
 
 ### Windows
 PowerShell script file: `MD5 7b78cc773ac69f55dba4caca4de6b437  Windows/aws-rotate-iam-keys.ps1`
+ 
