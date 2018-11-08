@@ -64,7 +64,7 @@ if [[ -z "$PROFILES" ]]; then
 	PROFILES=default
 fi
 
-set -f                      # avoid globbing (expansion of *).
+set -f; unset IFS             # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
 FIRST_PROFILE=${PROFILES_ARR[0]}
 
