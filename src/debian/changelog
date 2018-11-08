@@ -1,3 +1,9 @@
+aws-rotate-iam-keys (0.8.1) bionic; urgency=medium
+
+  * Resolve unbound variable bug
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Thu, 08 Nov 2018 08:43:32 -0900
+
 aws-rotate-iam-keys (0.8.0) bionic; urgency=medium
 
   * Multiple profiles work again

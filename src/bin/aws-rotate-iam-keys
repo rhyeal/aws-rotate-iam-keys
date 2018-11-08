@@ -77,7 +77,7 @@ if [[ "$CURRENT_KEY_ID" != "" ]]; then
   ACCESS_KEY=$(echo $RESPONSE | jq '.AccessKeyId' | tr -d '"')
   SECRET=$(echo $RESPONSE | jq '.SecretAccessKey' | tr -d '"')
   if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
-    aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[i]}
+    aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[0]}
 
     # Rotate the keys in the credentials file for all profiles
     for i in "${!PROFILES_ARR[@]}"
