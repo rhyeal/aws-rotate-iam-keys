@@ -5,6 +5,7 @@ class AwsRotateIamKeys < Formula
   sha256 "bff7a999f402db12114fae91d46455e5f36b9559fd4a07caad09c5f42a99b8d6"
   depends_on "awscli"
   depends_on "jq"
+  depends_on "gnu-getopt"
 
   def install
     bin.install "src/bin/aws-rotate-iam-keys"
