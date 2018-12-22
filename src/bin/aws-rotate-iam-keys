@@ -7,8 +7,8 @@ IFS=$'\n\t'
 
 ! getopt --test > /dev/null
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
-    if which brew &> /dev/null && test -d /usr/local/opt/gnu-getopt/bin; then
-        PATH="/usr/local/opt/gnu-getopt/bin:$PATH"
+    if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
+        PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
     else
         echo "I’m sorry, 'getopt --test' failed in this environment."
         exit 1
