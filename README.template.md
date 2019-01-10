@@ -115,8 +115,8 @@ Open a Terminal and cd into the Launch Agents directory. Make the plist file and
 
 ```
 cd ~/Library/LaunchAgents
-touch com.aws.rotate.iam.keys.plist
-nano com.aws.rotate.iam.keys.plist
+touch aws-rotate-iam-keys.plist
+nano aws-rotate-iam-keys.plist
 ```
 
 Copy and paste the following into your text editor:
@@ -126,41 +126,55 @@ Copy and paste the following into your text editor:
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>EnvironmentVariables</key>
-	<dict>
-		<key>PATH</key>
-		<string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
-	</dict>
-	<key>Label</key>
-	<string>com.aws.rotate.iam.keys</string>
-	<key>ProgramArguments</key>
-	<array>
-		<string>/usr/local/bin/aws-rotate-iam-keys</string>
-		<string>--profile</string>
-		<string>default</string>
-	</array>
-	<key>StartCalendarInterval</key>
-	<dict>
-		<key>Hour</key>
-		<integer>3</integer>
-		<key>Minute</key>
-		<integer>23</integer>
-	</dict>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>Label</key>
+  <string>aws-rotate-iam-keys</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>aws-rotate-iam-keys --profile default</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>3</integer>
+    <key>Minute</key>
+    <integer>23</integer>
+  </dict>
 </dict>
 </plist>
 
+```
+
+To rotate multiple profiles with their own keys, remember that you need to
+invoke `aws-rotate-iam-keys` multiple times. You can do this by simply sending
+multiple commands to bash, separating each invocation with semi-colons, e.g.
+
+```
+...
+  <array>
+    <string>/bin/bash</string>
+    <string>-c</string>
+    <string>aws-rotate-iam-keys -p myProfile ; aws-rotate-iam-keys -p myOtherProfile</string>
+  </array>
+...
 ```
 
 Save the file with `Ctrl` + `O` and then press `[Enter]`. Exit with `Ctrl` + `X`.
 
 Load up the launchd job with
 ```
-launchctl load -F ~/Library/LaunchAgents/com.aws.rotate.iam.keys.plist
+launchctl load -F ~/Library/LaunchAgents/aws-rotate-iam-keys.plist
 ```
 
 You can check that everything worked by running:
 ```
-launchctl start com.aws.rotate.iam.keys
+launchctl start aws-rotate-iam-keys
 ```
 
 That's it. Now your keys will be rotated every day for you.
