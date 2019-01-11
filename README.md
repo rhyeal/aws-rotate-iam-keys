@@ -102,14 +102,16 @@ EDITOR=nano crontab -e
 Copy and paste the following line into the end of the crontab file:
 
 ```
-33 4 * * * PATH=/usr/local/bin:$PATH aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+45 9 * * * PATH=/usr/local/bin:$PATH aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
 ```
+
+Note: MacOS cron skips job invocations when the computer is asleep, so you should schedule the job to run at a time when your computer is likely to be awake.
 
 Save your crontab with `Ctrl` + `O` and then press `[Enter]`. Exit and apply changes with `Ctrl` + `X`. That's it!
 
-#### Using launchd (MacOS recommended)
+#### Using launchd (recommended)
 
-[Launchd](http://www.launchd.info/) is the MacOS replacement for cron.
+[Launchd](http://www.launchd.info/) is the MacOS replacement for cron. Unlike cron, which skips job invocations when the computer is asleep, launchd will start the job the next time the computer wakes up.
 
 Open a Terminal and cd into the Launch Agents directory. Make the plist file and open your text editor.
 
