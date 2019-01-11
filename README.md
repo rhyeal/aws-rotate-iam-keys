@@ -139,6 +139,8 @@ Copy and paste the following into your text editor:
     <string>-c</string>
     <string>aws-rotate-iam-keys --profile default</string>
   </array>
+  <key>RunAtLoad</key>
+  <true/>
   <key>StartCalendarInterval</key>
   <dict>
     <key>Hour</key>
@@ -172,12 +174,10 @@ Load up the launchd job with
 launchctl load -F ~/Library/LaunchAgents/aws-rotate-iam-keys.plist
 ```
 
-You can check that everything worked by running:
-```
-launchctl start aws-rotate-iam-keys
-```
-
-That's it. Now your keys will be rotated every day for you.
+That's it. Your keys should have been rotated, and will now be rotated every
+day for you. You can confirm everything has worked by checking your IAM
+credentials to confirm the access keys have been rotated. If it hasn't worked,
+check the MacOS system log for error entries matching `aws-rotate-iam-keys`.
 
 ### Windows
 
