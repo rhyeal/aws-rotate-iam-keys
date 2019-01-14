@@ -48,9 +48,9 @@ brew install aws-rotate-iam-keys
 Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in Homebrew Core soon!
 
 ***IMPORTANT:*** You must install your own cron job for automated key rotation.
-[Instructions here](#macos-1) or scroll down to `Additional Cron Instructions` below.
+[Instructions here](#configuration) or scroll down to `Configuration` below.
 
-### Other Linux
+### Debian
 
 ```
 wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_${VERSION}.deb -o aws-rotate-iam-keys.deb
@@ -58,6 +58,17 @@ sudo dpkg -i aws-rotate-iam-keys.deb
 sudo apt-get install -f
 rm aws-rotate-iam-keys.deb # optional file clean up
 ```
+
+### Other Linux
+
+```
+git clone https://github.com/rhyeal/aws-rotate-iam-keys.git
+sudo cp aws-rotate-iam-keys/src/bin/aws-rotate-iam-keys /usr/bin/
+rm -rf aws-rotate-iam-keys
+```
+
+***IMPORTANT:*** You must install your own cron job for automated key rotation.
+[Instructions here](#configuration) or scroll down to `Configuration` below.
 
 ### Windows
 
@@ -165,6 +176,27 @@ credentials to see if the access keys have been rotated as expected. If it
 hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`.
 
+### Linux
+
+Add a cron job to run AWS Rotate IAM Keys nightly. Open your crontab by typing:
+
+```
+EDITOR=nano crontab -e
+```
+
+Copy and paste the following line into the end of the crontab file:
+
+```
+33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+```
+
+Note: your version of cron might skip job invocations when the computer is
+asleep, so you may need to schedule the job to run at a time when your
+computer is likely to be awake.
+
+Save your crontab with Ctrl + O and then press [Enter]. Exit and apply changes
+with Ctrl + X. That's it!
+
 ### Windows
 
 AWS Rotate IAM Keys is set up to automatically schedule a task for you upon
@@ -187,7 +219,7 @@ colors.
 
 ## Checksums
 
-### Linux
+### Ubuntu/Debian
 
 ```
 echo ${LINUX_MD5} aws-rotate-iam-keys.${VERSION}.deb | md5sum --check -
