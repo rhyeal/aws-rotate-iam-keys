@@ -89,8 +89,6 @@ via the package managers selected to create their own cron schedules.
 
 ### MacOS
 
-#### Using launchd via Homebrew services (recommended)
-
 [Launchd](http://www.launchd.info/) is the MacOS replacement for cron. Unlike
 cron, which on MacOS skips job invocations when the computer is asleep, launchd
 will start the job the next time the computer wakes up.
@@ -141,24 +139,6 @@ day for you. You can confirm everything has worked by checking your IAM
 credentials to see if the access keys have been rotated as expected. If it
 hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`.
-
-#### Using a cron job (easier, but less reliable)
-
-Open your crontab by typing:
-
-```
-EDITOR=nano crontab -e
-```
-
-Copy and paste the following line into the end of the crontab file:
-
-```
-45 9 * * * PATH=/usr/local/bin:$PATH aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
-```
-
-Note: MacOS cron skips job invocations when the computer is asleep, so you should schedule the job to run at a time when your computer is likely to be awake.
-
-Save your crontab with `Ctrl` + `O` and then press `[Enter]`. Exit and apply changes with `Ctrl` + `X`. That's it!
 
 ### Windows
 
