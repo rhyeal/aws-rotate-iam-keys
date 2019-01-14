@@ -16,12 +16,16 @@ automatically.
 
 ## Caveats
 
-Currently, AWS Rotate IAM Keys will only work with a single computer. Rotating
-keys on a desktop and a laptop for the same IAM user will lead to invalid keys.
+AWS Rotate IAM Keys is designed to work with a single computer. Rotating keys
+on a desktop and a laptop for the same IAM user will lead to invalid keys. To
+use AWS Rotate IAM Keys with multiple computers you will need to find a way to
+synchronize your aws credentials across multiple computers. We've had success
+synchonzing credentials across multiple computers using both
+[SpiderOak](https://spideroak.com) and [Sync.com](https://sync.com), but YMMV.
 
-AWS Rotate IAM Keys takes an opinionated view that you should only have 1 active
-key at a time. It might not work with IAM users that have 2 keys active at a
-time.
+AWS Rotate IAM Keys also assumes you only have 1 active access key at a time.
+This is normal practice for IAM users. The maximum number of active keys is 2,
+and you need to be able to create a new key when rotating your access keys.
 
 ## Installation
 
