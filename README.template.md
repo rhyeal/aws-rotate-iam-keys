@@ -11,8 +11,7 @@ before.
 
 AWS Rotate IAM Keys is simple and powerful. There aren't too many features other
 than rotating keys for a single profile or multiple profiles. The power comes
-from multiple cron jobs daily that can rotate multiple sets of keys
-automatically.
+from scheduling daily jobs to rotate your access keys automatically.
 
 ## Caveats
 
@@ -45,10 +44,12 @@ sudo apt-get install aws-rotate-iam-keys
 brew tap rhyeal/aws-rotate-iam-keys https://github.com/rhyeal/aws-rotate-iam-keys
 brew install aws-rotate-iam-keys
 ```
-Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in Homebrew Core soon!
 
-***IMPORTANT:*** You must install your own cron job for automated key rotation.
-[Instructions here](#configuration) or scroll down to `Configuration` below.
+Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in
+Homebrew Core soon!
+
+***IMPORTANT:*** You must install your own scheduled job for automated key
+rotation. See [Configuration](#configuration).
 
 ### Debian
 
@@ -67,8 +68,8 @@ sudo cp aws-rotate-iam-keys/src/bin/aws-rotate-iam-keys /usr/bin/
 rm -rf aws-rotate-iam-keys
 ```
 
-***IMPORTANT:*** You must install your own cron job for automated key rotation.
-[Instructions here](#configuration) or scroll down to `Configuration` below.
+***IMPORTANT:*** You must install your own cron job for automated key
+rotation. See [Configuration](#configuration).
 
 ### Windows
 
@@ -119,9 +120,33 @@ have **different** access and secret keys in your `~/.aws/credentials` file.
 
 ## Configuration
 
-For some operating systems, you need to install your own cron schedule. This is
-due to the fact that some operating systems do not allow installed programs
-via the package managers selected to create their own cron schedules.
+For some operating systems, you need to install your own scheduled job as not
+all package managers allow programs to create their own scheduled jobs. Also,
+the scheduled job installed on Ubuntu, Debian and Windows only rotates keys for
+your default profile. If you need to rotate keys for other profiles you will
+need to edit the job or add more jobs.
+
+### Ubuntu/Debian
+
+A default job was added to your crontab during installation. This job rotates
+keys for your default profile. To rotate keys for other profiles you will need
+to edit your crontab and modify the configuration. Open your crontab by typing:
+
+```
+EDITOR=nano crontab -e
+```
+
+Look for a line like:
+
+```
+33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+```
+
+Edit the profile for the job if necessary. Add further jobs if you need to
+invoke `aws-rotate-iam-keys` multiple times to rotate multiple profiles.
+
+Save your crontab with Ctrl + O and then press [Enter]. Exit and apply changes
+with Ctrl + X. That's it!
 
 ### MacOS
 
@@ -176,7 +201,7 @@ credentials to see if the access keys have been rotated as expected. If it
 hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`.
 
-### Linux
+### Other Linux
 
 Add a cron job to run AWS Rotate IAM Keys nightly. Open your crontab by typing:
 
@@ -189,6 +214,9 @@ Copy and paste the following line into the end of the crontab file:
 ```
 33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
 ```
+
+Edit the profile for the job if necessary. Add further jobs if you need to
+invoke `aws-rotate-iam-keys` multiple times to rotate multiple profiles.
 
 Note: your version of cron might skip job invocations when the computer is
 asleep, so you may need to schedule the job to run at a time when your
