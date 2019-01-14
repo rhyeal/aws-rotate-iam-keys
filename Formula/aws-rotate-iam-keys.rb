@@ -9,6 +9,68 @@ class AwsRotateIamKeys < Formula
 
   def install
     bin.install "src/bin/aws-rotate-iam-keys"
+    (buildpath/"aws-rotate-iam-keys").write <<~EOS
+      --profile default
+    EOS
+    etc.install "aws-rotate-iam-keys"
+  end
+
+  def caveats
+    s = <<~EOS
+      We've installed a default/global configuration file to:
+          #{etc}/aws-rotate-iam-keys
+
+      The default configuration rotates keys for your default AWS profile only.
+
+      To customise the configuration, for example to rotate multiple profiles,
+      create a copy of this file named ".aws-rotate-iam-keys" in your home
+      directory and edit it, e.g.
+
+          cp #{etc}/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
+          nano ~/.aws-rotate-iam-keys
+
+      When run as a service, the aws-rotate-iam-keys command is invoked once
+      daily for each line in the configuration. Each line contains a single set
+      of command line options. If you need to invoke the command multiple times
+      to rotate your keys, you must add multiple lines to the configuration, e.g.
+
+          --profiles default,myProfile
+          --profile myOtherProfile
+    EOS
+  end
+
+  plist_options :startup => false
+
+  def plist; <<~EOS
+    <?xml version="1.0" encoding="UTF-8"?>
+    <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+    <plist version="1.0">
+    <dict>
+      <key>EnvironmentVariables</key>
+      <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+      </dict>
+      <key>Label</key>
+      <string>#{plist_name}</string>
+      <key>ProgramArguments</key>
+      <array>
+        <string>/bin/bash</string>
+        <string>-c</string>
+        <string>( cat ~/.aws-rotate-iam-keys 2>/dev/null || cat #{etc}/aws-rotate-iam-keys ) | while read line; do aws-rotate-iam-keys $line; done</string>
+      </array>
+      <key>RunAtLoad</key>
+      <true/>
+      <key>StartCalendarInterval</key>
+      <dict>
+        <key>Hour</key>
+        <integer>3</integer>
+        <key>Minute</key>
+        <integer>23</integer>
+      </dict>
+    </dict>
+    </plist>
+  EOS
   end
 
   test do

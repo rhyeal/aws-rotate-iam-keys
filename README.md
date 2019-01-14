@@ -20,7 +20,7 @@ brew install aws-rotate-iam-keys
 ```
 Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in Homebrew Core soon!
 
-***IMPORTANT:*** You must install your own cron job for automated key rotation. [Instructions here](https://github.com/rhyeal/aws-rotate-iam-keys#macos-1) or scroll down to `Additional Cron Instructions` below.
+***IMPORTANT:*** You must install your own cron job for automated key rotation. [Instructions here](#macos-1) or scroll down to `Additional Cron Instructions` below.
 
 ### Other Linux
 
@@ -89,9 +89,60 @@ via the package managers selected to create their own cron schedules.
 
 ### MacOS
 
-MacOS does not allow programs to modify the crontab when installing via Homebrew. Unfortunately, this means that MacOS users will need to manually finish installation to automate AWS Rotate IAM Keys. Here's how to do that:
+#### Using launchd via Homebrew services (recommended)
 
-#### Using a cron job (easiest)
+[Launchd](http://www.launchd.info/) is the MacOS replacement for cron. Unlike
+cron, which on MacOS skips job invocations when the computer is asleep, launchd
+will start the job the next time the computer wakes up.
+
+The Homebrew package installs a launchd job which can be used to automatically
+rotate your IAM keys daily. Unfortunately, Homebrew packages cannot
+automatically start launchd jobs, so you must manually enable it:
+
+```
+brew services start aws-rotate-iam-keys
+```
+
+A default/global configuration file for the launchd job is installed to:
+
+```
+/usr/local/etc/aws-rotate-iam-keys
+```
+
+This default configuration rotates keys for your default AWS profile only.
+To customise the configuration, for example to rotate multiple keys, create a
+copy of this file named `.aws-rotate-iam-keys` in your home directory and edit
+it, e.g.
+
+```
+cp /usr/local/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
+nano ~/.aws-rotate-iam-keys
+```
+
+The `aws-rotate-iam-keys` command is invoked once daily for each line in the
+configuration. Each line contains a single set of command line options. If you
+need to invoke the command multiple times to rotate your keys, you must add
+multiple lines to the configuration, e.g.
+
+```
+--profiles default,myProfile
+--profile myOtherProfile
+```
+
+If you do customise the configuration, you can test that it works by restarting
+the service:
+
+```
+brew services restart aws-rotate-iam-keys
+```
+
+That's it. Your keys should have been rotated, and will now be rotated every
+day for you. You can confirm everything has worked by checking your IAM
+credentials to see if the access keys have been rotated as expected. If it
+hasn't worked, check the MacOS system log for error entries matching
+`aws-rotate-iam-keys`.
+
+#### Using a cron job (easier, but less reliable)
 
 Open your crontab by typing:
 
@@ -108,78 +159,6 @@ Copy and paste the following line into the end of the crontab file:
 Note: MacOS cron skips job invocations when the computer is asleep, so you should schedule the job to run at a time when your computer is likely to be awake.
 
 Save your crontab with `Ctrl` + `O` and then press `[Enter]`. Exit and apply changes with `Ctrl` + `X`. That's it!
-
-#### Using launchd (recommended)
-
-[Launchd](http://www.launchd.info/) is the MacOS replacement for cron. Unlike cron, which skips job invocations when the computer is asleep, launchd will start the job the next time the computer wakes up.
-
-Open a Terminal and cd into the Launch Agents directory. Make the plist file and open your text editor.
-
-```
-cd ~/Library/LaunchAgents
-touch aws-rotate-iam-keys.plist
-nano aws-rotate-iam-keys.plist
-```
-
-Copy and paste the following into your text editor:
-
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>EnvironmentVariables</key>
-  <dict>
-    <key>PATH</key>
-    <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
-  </dict>
-  <key>Label</key>
-  <string>aws-rotate-iam-keys</string>
-  <key>ProgramArguments</key>
-  <array>
-    <string>/bin/bash</string>
-    <string>-c</string>
-    <string>aws-rotate-iam-keys --profile default</string>
-  </array>
-  <key>RunAtLoad</key>
-  <true/>
-  <key>StartCalendarInterval</key>
-  <dict>
-    <key>Hour</key>
-    <integer>3</integer>
-    <key>Minute</key>
-    <integer>23</integer>
-  </dict>
-</dict>
-</plist>
-
-```
-
-To rotate multiple profiles with their own keys, remember that you need to
-invoke `aws-rotate-iam-keys` multiple times. You can do this by simply sending
-multiple commands to bash, separating each invocation with semi-colons, e.g.
-
-```
-...
-  <array>
-    <string>/bin/bash</string>
-    <string>-c</string>
-    <string>aws-rotate-iam-keys -p myProfile ; aws-rotate-iam-keys -p myOtherProfile</string>
-  </array>
-...
-```
-
-Save the file with `Ctrl` + `O` and then press `[Enter]`. Exit with `Ctrl` + `X`.
-
-Load up the launchd job with
-```
-launchctl load -F ~/Library/LaunchAgents/aws-rotate-iam-keys.plist
-```
-
-That's it. Your keys should have been rotated, and will now be rotated every
-day for you. You can confirm everything has worked by checking your IAM
-credentials to confirm the access keys have been rotated. If it hasn't worked,
-check the MacOS system log for error entries matching `aws-rotate-iam-keys`.
 
 ### Windows
 
