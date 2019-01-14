@@ -41,12 +41,12 @@ Simply place this in any directory and then run it. It will install the Schedule
 
 AWS Rotate IAM Keys is simple and powerful. There aren't too many features other than rotating keys for a single profile or multiple profiles. The power comes from multiple cron jobs daily that can rotate multiple sets of keys automatically.
 
-### Improvements / Issues
+## Caveats
 
 * Currently, AWS Rotate IAM Keys will only work with a single computer. Rotating keys on a desktop and a laptop for the same IAM user will lead to invalid keys.
 * AWS Rotate IAM Keys takes an opinionated view that you should only have 1 active key at a time. It might not work with IAM users that have 2 keys active at a time.
 
-## Documentation
+## Usage
 
 #### To rotate your default profile manually:
 
@@ -82,7 +82,7 @@ $ aws-rotate-iam-keys --profile myOtherProfile
 
 The result of the above script is that `myProfile` and `myOtherProfile` will have **different** access and secret keys in your `~/.aws/credentials` file.
 
-## Additional Cron Instructions
+## Configuration
 For some operating systems, you need to install your own cron schedule. This is
 due to the fact that some operating systems do not allow installed programs
 via the package managers selected to create their own cron schedules.
