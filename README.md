@@ -7,6 +7,22 @@ less than 3 lines that you need to copy + paste to be secure. Now it's easy to
 rotate your IAM credentials nightly and wake up with more security than the day
 before.
 
+## Features
+
+AWS Rotate IAM Keys is simple and powerful. There aren't too many features other
+than rotating keys for a single profile or multiple profiles. The power comes
+from multiple cron jobs daily that can rotate multiple sets of keys
+automatically.
+
+## Caveats
+
+Currently, AWS Rotate IAM Keys will only work with a single computer. Rotating
+keys on a desktop and a laptop for the same IAM user will lead to invalid keys.
+
+AWS Rotate IAM Keys takes an opinionated view that you should only have 1 active
+key at a time. It might not work with IAM users that have 2 keys active at a
+time.
+
 ## Installation
 
 AWS Rotate IAM Keys is supported by all major platforms.
@@ -47,22 +63,6 @@ download the executable PowerShell script.
 Simply place this in any directory and then run it. It will install the
 Scheduled Task to rotate your keys nightly upon first run and will rotate your
 keys on each run thereafter.
-
-## Features
-
-AWS Rotate IAM Keys is simple and powerful. There aren't too many features other
-than rotating keys for a single profile or multiple profiles. The power comes
-from multiple cron jobs daily that can rotate multiple sets of keys
-automatically.
-
-## Caveats
-
-Currently, AWS Rotate IAM Keys will only work with a single computer. Rotating
-keys on a desktop and a laptop for the same IAM user will lead to invalid keys.
-
-AWS Rotate IAM Keys takes an opinionated view that you should only have 1 active
-key at a time. It might not work with IAM users that have 2 keys active at a
-time.
 
 ## Usage
 
