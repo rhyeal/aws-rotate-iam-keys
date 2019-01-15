@@ -154,8 +154,8 @@ with Ctrl + X. That's it!
 cron, which on MacOS skips job invocations when the computer is asleep, launchd
 will start the job the next time the computer wakes up.
 
-The Homebrew package installs a launchd job which can be used to automatically
-rotate your IAM keys daily. Unfortunately, Homebrew packages cannot
+The Homebrew formula installs a launchd job which can be used to automatically
+rotate your IAM keys daily. Unfortunately, Homebrew forumlae cannot
 automatically start launchd jobs, so you must manually enable it:
 
 ```
