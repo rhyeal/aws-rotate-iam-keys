@@ -196,9 +196,14 @@ brew services restart aws-rotate-iam-keys
 ```
 
 That's it. Your keys should have been rotated, and will now be rotated every
-day for you. You can confirm everything has worked by checking your IAM
-credentials to see if the access keys have been rotated as expected. If it
-hasn't worked, check the MacOS system log for error entries matching
+day for you. You can use the AWS CLI to check that your access keys have been
+rotated as expected, e.g.
+
+```
+aws iam list-access-keys --profile default
+```
+
+If it hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`.
 
 ### Other Linux
