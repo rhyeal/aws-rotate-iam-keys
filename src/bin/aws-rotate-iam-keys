@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Log to syslog if output streams not attached to a terminal (cron, launchd)
+if ! test -t 1 && ! test -t 2; then
+  exec 1> >(tee >(logger -t $(basename $0))) 2>&1
+fi
+
 # Assign the arguments to variables
 # saner programming env: these switches turn some bugs into errors
 set -eu -o errexit -o pipefail -o noclobber -o nounset
