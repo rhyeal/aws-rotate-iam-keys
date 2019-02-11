@@ -7,8 +7,12 @@ IFS=$'\n\t'
 
 ! getopt --test > /dev/null
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
-    echo "I’m sorry, `getopt --test` failed in this environment."
-    exit 1
+    if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
+        PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
+    else
+        echo "I’m sorry, 'getopt --test' failed in this environment."
+        exit 1
+    fi
 fi
 
 # -use ! and PIPESTATUS to get exit code with errexit set

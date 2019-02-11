@@ -102,7 +102,7 @@ EDITOR=nano crontab -e
 Copy and paste the following line into the end of the crontab file:
 
 ```
-33 4 * * * /usr/local/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+33 4 * * * PATH=/usr/local/bin:$PATH aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
 ```
 
 Save your crontab with `Ctrl` + `O` and then press `[Enter]`. Exit and apply changes with `Ctrl` + `X`. That's it!
