@@ -204,7 +204,12 @@ aws iam list-access-keys --profile default
 ```
 
 If it hasn't worked, check the MacOS system log for error entries matching
-`aws-rotate-iam-keys`.
+`aws-rotate-iam-keys`. If you can't find anything useful, the launchd job also
+writes output to a file in the `/tmp` directory matching the job name, e.g.
+
+```
+/tmp/homebrew.mxcl.aws-rotate-iam-keys.log
+```
 
 ### Other Linux
 
