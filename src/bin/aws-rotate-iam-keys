@@ -82,7 +82,7 @@ CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE
 if [[ "$CURRENT_KEY_ID" != "" ]]; then
   # Make a new key
   echo "Making new access key"
-  RESPONSE=$(aws iam create-access-key --profile $FIRST_PROFILE | jq .AccessKey)
+  RESPONSE=$(aws iam create-access-key --output json --profile $FIRST_PROFILE | jq .AccessKey)
   ACCESS_KEY=$(echo $RESPONSE | jq '.AccessKeyId' | tr -d '"')
   SECRET=$(echo $RESPONSE | jq '.SecretAccessKey' | tr -d '"')
   if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
