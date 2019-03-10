@@ -80,6 +80,28 @@ Simply place this in any directory and then run it. It will install the
 Scheduled Task to rotate your keys nightly upon first run and will rotate your
 keys on each run thereafter.
 
+### AWS
+
+The minimal needed permissions for the AWS user are:
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"iam:ListAccessKeys",
+				"iam:CreateAccessKey",
+				"iam:DeleteAccessKey"
+			],
+			"Resource": [
+				"arn:aws:iam::*:user/${aws:username}"
+			]
+		}
+	]
+}
+```
+
 ## Usage
 
 #### To rotate your default profile manually:
