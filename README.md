@@ -54,7 +54,7 @@ rotation. See [Configuration](#configuration).
 ### Debian
 
 ```
-wget -q https://github.com/rhyeal/aws-rotate-iam-keys/blob/master/aws-rotate-iam-keys_0.9.1.deb -o aws-rotate-iam-keys.deb
+wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.1.deb -O aws-rotate-iam-keys.deb
 sudo dpkg -i aws-rotate-iam-keys.deb
 sudo apt-get install -f
 rm aws-rotate-iam-keys.deb # optional file clean up
@@ -79,6 +79,28 @@ download the executable PowerShell script.
 Simply place this in any directory and then run it. It will install the
 Scheduled Task to rotate your keys nightly upon first run and will rotate your
 keys on each run thereafter.
+
+### AWS
+
+The minimal needed permissions for the AWS user are:
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Effect": "Allow",
+			"Action": [
+				"iam:ListAccessKeys",
+				"iam:CreateAccessKey",
+				"iam:DeleteAccessKey"
+			],
+			"Resource": [
+				"arn:aws:iam::*:user/${aws:username}"
+			]
+		}
+	]
+}
+```
 
 ## Usage
 
