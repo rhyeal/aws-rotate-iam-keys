@@ -1,3 +1,9 @@
+aws-rotate-iam-keys (0.9.2) bionic; urgency=medium
+
+  * Merged in PRs for raw output of jq and wget option on website
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 04 Jun 2019 11:44:58 -0800
+
 aws-rotate-iam-keys (0.9.1) bionic; urgency=medium
 
   * Specify JSON output

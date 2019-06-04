@@ -54,7 +54,7 @@ rotation. See [Configuration](#configuration).
 ### Debian
 
 ```
-wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.1.deb -O aws-rotate-iam-keys.deb
+wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.2.deb -O aws-rotate-iam-keys.deb
 sudo dpkg -i aws-rotate-iam-keys.deb
 sudo apt-get install -f
 rm aws-rotate-iam-keys.deb # optional file clean up
@@ -282,12 +282,12 @@ colors.
 ### Ubuntu/Debian
 
 ```
-echo 7ed36bc2762356b15d05d536ed0a7983 aws-rotate-iam-keys.0.9.1.deb | md5sum --check -
+echo 866db63fc904a0a7cb1e8efb3b4a2257 aws-rotate-iam-keys.0.9.2.deb | md5sum --check -
 ```
 
 ### MacOS
 
-Homebrew gets the release zip of the entire repo: `SHA256 8a908053c363fbc5d0aba5440e6bdefbf1a4a554549fe5ec3506d200c2a9161d`
+Homebrew gets the release zip of the entire repo: `SHA256 2bbc39e9783907451d8ce1eaba93dc6775ad6797221122ec96ec671f23f6344f`
 
 ### Windows
 
