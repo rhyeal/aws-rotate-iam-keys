@@ -287,7 +287,7 @@ echo 866db63fc904a0a7cb1e8efb3b4a2257 aws-rotate-iam-keys.0.9.2.deb | md5sum --c
 
 ### MacOS
 
-Homebrew gets the release zip of the entire repo: `SHA256 997230eb7c75282a951ee4e83310f2830e453a1e121cfe84cfd4733a69b6d3b9`
+Homebrew gets the release zip of the entire repo: `SHA256 9101bff2a889e5c883fda99b12588dd50bee9d42faf77f6d6e5d94ab35abb9e1`
 
 ### Windows
 
