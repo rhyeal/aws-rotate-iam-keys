@@ -29,7 +29,7 @@ references:
     run:
       name: Load version from file
       command: |
-        echo "export VERSION=$(cat VERSION)" >> $BASH_ENV
+        echo "export VERSION=0.9.2" >> $BASH_ENV
 
 jobs:
   checkout_code:
