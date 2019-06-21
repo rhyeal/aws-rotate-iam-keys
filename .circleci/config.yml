@@ -10,13 +10,92 @@ version: 2.1
 # push the new checksum to the repo master branch
 
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
+  aws-cli: airswap/aws-cli@volatile
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+references:
+  container_config: &container_config
+    docker:
+      - image: circleci/python:3.6.1
+    working_directory: ~/repo
+
+  restore_repo: &restore_repo
+    restore_cache:
+      keys:
+        - v1-repo-{{ .Branch }}-{{ .Revision }}
+        - v1-repo-{{ .Branch }}
+        - v1-repo
+
+  load_version: &load_version
+    run:
+      name: Load version from file
+      command: |
+        echo "export VERSION=$(cat VERSION)" >> $BASH_ENV
+
+jobs:
+  checkout_code:
+    <<: *container_config
+    steps:
+      - checkout:
+          path: ~/repo
+      - save_cache:
+          key: v1-repo-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .
+
+  change_website:
+    <<: *container_config
+    steps:
+      - *restore_repo
+      - *load_version
+      - run:
+          name: Change the website
+          command: |
+            # version swap the website
+            echo $VERSION
+            envsubst < website/index.template.html > website/index.html
+            aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read
+            aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
+
+  build:
+    <<: *container_config
+    steps:
+      - *restore_repo
+
+  test:
+    <<: *container_config
+    steps:
+      - *restore_repo
+
+  release:
+    <<: *container_config
+    steps:
+      - *restore_repo
+
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  build_and_deploy:
     jobs:
-      - welcome/run
+      - checkout_code
+      # - build
+      #     context: Personal_AWS
+      #     requires:
+      #       - checkout_code
+      # - test
+      #     context: Personal_AWS
+      #     requires:
+      #       - build
+      # - release
+      #     context: Personal_AWS
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only:
+      #           - adding-ci
+      - change_website
+          context: Personal_AWS
+          requires:
+            - release
+          filters:
+            branches:
+              only:
+                - adding-ci
