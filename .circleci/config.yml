@@ -52,6 +52,7 @@ jobs:
           command: |
             # version swap the website
             echo $VERSION
+            echo $CIRCLE_TAG # use this instead as the version
             envsubst < website/index.template.html > website/index.html
             aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read
             aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
@@ -60,6 +61,32 @@ jobs:
     <<: *container_config
     steps:
       - *restore_repo
+      - *load_version
+      - run:
+          name: Build the .deb package for Bionic
+          command: |
+            # version swap the website
+            echo $VERSION
+            echo $CIRCLE_TAG # use this instead as the version
+            sudo apt install devscripts
+            # make the dist folder
+            mkdir -p dist
+            # copy in the src and swap the versions
+            cp -r src/** dist/
+            sed "s/<<VERSION>>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+
+            CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
+            # make the homebrew zip file
+            zip -r aws-rotate-iam-keys_$VERSION.zip src
+
+            cd dist
+
+            # make the changelog
+            #DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" dch -v $VERSION --distribution bionic --force-distribution
+
+            #mv debian DEBIAN
+            #envsubst < DEBIAN/control-debian > DEBIAN/control
+
 
   test:
     <<: *container_config
@@ -75,10 +102,10 @@ workflows:
   build_and_deploy:
     jobs:
       - checkout_code
-      # - build:
-      #     context: Personal_AWS
-      #     requires:
-      #       - checkout_code
+      - build:
+          context: Personal_AWS
+          requires:
+            - checkout_code
       # - test:
       #     context: Personal_AWS
       #     requires:
@@ -88,13 +115,14 @@ workflows:
       #     requires:
       #       - test
       #     filters:
-      #       branches:
-      #         only:
-      #           - adding-ci
+      #         tags:
+      #           only: /^v.*/
+      #         branches:
+      #           ignore: /.*/
       - change_website:
           context: Personal_AWS
-          requires:
-            - release
+          # requires:
+          #   - release
           filters:
             branches:
               only:
