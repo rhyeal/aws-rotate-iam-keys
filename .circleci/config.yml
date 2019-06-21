@@ -1,0 +1,22 @@
+version: 2.1
+
+# Set up the environment variables
+# update the website
+# make the homebrew zip folder
+# make the changelog
+# make the debian file
+# update the readme
+# pull the checksum version
+# push the new checksum to the repo master branch
+
+orbs:
+  # Declare a dependency on the welcome-orb
+  welcome: circleci/welcome-orb@0.3.1
+
+# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+workflows:
+  # Name the workflow "Welcome"
+  Welcome:
+    # Run the welcome/run job in its own container
+    jobs:
+      - welcome/run
