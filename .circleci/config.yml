@@ -75,15 +75,15 @@ workflows:
   build_and_deploy:
     jobs:
       - checkout_code
-      # - build
+      # - build:
       #     context: Personal_AWS
       #     requires:
       #       - checkout_code
-      # - test
+      # - test:
       #     context: Personal_AWS
       #     requires:
       #       - build
-      # - release
+      # - release:
       #     context: Personal_AWS
       #     requires:
       #       - test
@@ -91,7 +91,7 @@ workflows:
       #       branches:
       #         only:
       #           - adding-ci
-      - change_website
+      - change_website:
           context: Personal_AWS
           requires:
             - release
