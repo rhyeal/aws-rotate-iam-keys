@@ -18,6 +18,16 @@ references:
       - image: circleci/python:3.6.1
     working_directory: ~/repo
 
+  container_config_bionic: &container_config_bionic
+    docker:
+      - image: circleci/buildpack-deps:bionic
+    working_directory: ~/repo
+
+  container_config_xenial: &container_config_xenial
+    docker:
+      - image: circleci/buildpack-deps:xenial
+    working_directory: ~/repo
+
   restore_repo: &restore_repo
     restore_cache:
       keys:
@@ -53,12 +63,13 @@ jobs:
             # version swap the website
             echo $VERSION
             echo $CIRCLE_TAG # use this instead as the version
+            sudo apt-get install gettext-base
             envsubst < website/index.template.html > website/index.html
             aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read
             aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
 
   build:
-    <<: *container_config
+    <<: *container_config_bionic
     steps:
       - *restore_repo
       - *load_version
@@ -68,7 +79,8 @@ jobs:
             # version swap the website
             echo $VERSION
             echo $CIRCLE_TAG # use this instead as the version
-            sudo apt install devscripts
+            #sudo apt-get update
+            #sudo apt install devscripts
             # make the dist folder
             mkdir -p dist
             # copy in the src and swap the versions
@@ -82,9 +94,12 @@ jobs:
             cd dist
 
             # make the changelog
-            #DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" dch -v $VERSION --distribution bionic --force-distribution
+            DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>"
+            DEBFULLNAME="Adam Link"
+            dch -v $VERSION --distribution bionic --force-distribution
 
             #mv debian DEBIAN
+            #sudo apt-get install gettext-base
             #envsubst < DEBIAN/control-debian > DEBIAN/control
 
 
