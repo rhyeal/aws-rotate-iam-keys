@@ -18,16 +18,6 @@ references:
       - image: circleci/ruby:jessie
     working_directory: ~/repo
 
-  container_config_bionic: &container_config_bionic
-    docker:
-      - image: circleci/buildpack-deps:bionic
-    working_directory: ~/repo
-
-  container_config_xenial: &container_config_xenial
-    docker:
-      - image: circleci/buildpack-deps:xenial
-    working_directory: ~/repo
-
   restore_repo: &restore_repo
     restore_cache:
       keys:
@@ -70,14 +60,24 @@ jobs:
             aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
 
   build:
-    <<: *container_config_bionic
+    <<: *container_config
     steps:
       - *restore_repo
       - *load_version
       - run:
-          name: Build the .deb package for Bionic
+          name: Build the .deb package
           command: |
-            # version swap the website
+            PKG_NAME=aws-rotate-iam-keys
+            PKG_DESCRIPTION="Get secure with automatic IAM key rotation"
+            PKG_VERSION=${VERSION}
+            PKG_RELEASE=0
+            PKG_MAINTAINER="Adam Link \<aws-rotate-iam-keys@rhyeal.com\>"
+            PKG_ARCH=all
+            PKG_DEB=${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb
+            PKG_RPM=${PKG_NAME}-${PKG_VERSION}-${PKG_RELEASE}.${PKG_ARCH_RPM}.rpm
+            FPM_OPTS=-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)
+
+            sudo gem install fpm
             echo $VERSION
             echo $CIRCLE_TAG # use this instead as the version
             #sudo apt-get update
@@ -90,18 +90,18 @@ jobs:
 
             CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
             # make the homebrew zip file
-            zip -r aws-rotate-iam-keys_$VERSION.zip src
+            zip -r ${PKG_NAME}_${VERSION}.zip dist
 
-            cd dist
-
-            # make the changelog
-            DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>"
-            DEBFULLNAME="Adam Link"
-            dch -v $VERSION --distribution bionic --force-distribution
-
-            #mv debian DEBIAN
-            #sudo apt-get install gettext-base
-            #envsubst < DEBIAN/control-debian > DEBIAN/control
+            fpm -t deb -p $(PKG_DEB) $(FPM_OPTS) \
+            -d awscli \
+            -d bash \
+            -d jq \
+            --after-install postinst \
+            --before-remove prerm \
+            dist
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
 
 
   test:
