@@ -15,7 +15,7 @@ orbs:
 references:
   container_config: &container_config
     docker:
-      - image: circleci/python:3.6.1
+      - image: circleci/ruby:jessie
     working_directory: ~/repo
 
   container_config_bionic: &container_config_bionic
@@ -57,6 +57,7 @@ jobs:
     steps:
       - *restore_repo
       - *load_version
+      - aws-cli/install
       - run:
           name: Change the website
           command: |
@@ -136,8 +137,8 @@ workflows:
       #           ignore: /.*/
       - change_website:
           context: Personal_AWS
-          # requires:
-          #   - release
+          requires:
+            - checkout_code
           filters:
             branches:
               only:
