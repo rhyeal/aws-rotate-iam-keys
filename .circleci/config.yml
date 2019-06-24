@@ -67,15 +67,15 @@ jobs:
       - run:
           name: Build the .deb package
           command: |
-            PKG_NAME=aws-rotate-iam-keys
+            PKG_NAME="aws-rotate-iam-keys"
             PKG_DESCRIPTION="Get secure with automatic IAM key rotation"
-            PKG_VERSION=${VERSION}
-            PKG_RELEASE=0
+            PKG_VERSION="$VERSION"
+            PKG_RELEASE="0"
             PKG_MAINTAINER="Adam Link \<aws-rotate-iam-keys@rhyeal.com\>"
-            PKG_ARCH=all
-            PKG_DEB=${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb
-            PKG_RPM=${PKG_NAME}-${PKG_VERSION}-${PKG_RELEASE}.${PKG_ARCH_RPM}.rpm
-            FPM_OPTS=-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)
+            PKG_ARCH="all"
+            TMPINSTALLDIR="/tmp/$(PKG_NAME)-fpm-install"
+            PKG_DEB="${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb"
+            FPM_OPTS="-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)"
 
             sudo gem install fpm
             echo $VERSION
