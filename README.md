@@ -40,13 +40,16 @@ sudo apt-get install aws-rotate-iam-keys
 
 ### MacOS
 
+Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in
+Homebrew Core soon!
+
 ```
 brew tap rhyeal/aws-rotate-iam-keys https://github.com/rhyeal/aws-rotate-iam-keys
 brew install aws-rotate-iam-keys
 ```
 
-Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in
-Homebrew Core soon!
+Note: this automatically installs/upgrades the `awscli` homebrew package and its
+dependent packages. You can skip this using `brew install aws-rotate-iam-keys --without-awscli`.
 
 ***IMPORTANT:*** You must install your own scheduled job for automated key
 rotation. See [Configuration](#configuration).
