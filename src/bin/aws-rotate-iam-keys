@@ -15,7 +15,10 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
         PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
     else
-        echo "I’m sorry, 'getopt --test' failed in this environment."
+        echo "GNU's enhanced getopt is required to run this script"
+        echo "You can usually find this in the util-linux package"
+        echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt"
+        echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt"
         exit 1
     fi
 fi
