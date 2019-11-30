@@ -15,10 +15,10 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
         PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
     else
-        echo "GNU's enhanced getopt is required to run this script"
-        echo "You can usually find this in the util-linux package"
-        echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt"
-        echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt"
+        echo "GNU's enhanced getopt is required to run this script" >&2
+        echo "You can usually find this in the util-linux package" >&2
+        echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt" >&2
+        echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt" >&2
         exit 1
     fi
 fi
@@ -105,10 +105,10 @@ if [[ "$CURRENT_KEY_ID" != "" ]]; then
     echo "Key rotated"
     exit 0
   else
-    echo "Could not create access key. Ensure you only have 1 active access key in your IAM profile."
+    echo "Could not create access key. Ensure you only have 1 active access key in your IAM profile." >&2
     exit 1
   fi
 else
-  echo "Could not find current key. Please ensure you have a profile set up using `aws configure`."
+  echo "Could not find current key. Please ensure you have a profile set up using `aws configure`." >&2
   exit 1
 fi
