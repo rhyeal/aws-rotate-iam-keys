@@ -88,8 +88,8 @@ for i in "${!PROFILES_ARR[@]}"
 do
   ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
   SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null)
-  if [[ -z "$ACCESS_KEY_ID" ]]; then
-    echo "Could not find key for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
+  if [[ -z "$ACCESS_KEY_ID" ]] || [[ -z "$SECRET_ACCESS_KEY" ]]; then
+    echo "Could not find keys for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
     exit 1
   fi
 done
