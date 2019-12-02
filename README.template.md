@@ -108,10 +108,14 @@ The minimal needed permissions for the AWS user are:
 
 ```
 $ aws-rotate-iam-keys
-Making new access key
+Rotating keys for profiles: default
+Verifying configuration
+Verifying credentials
+Creating new access key
+Created new key AKIAIOSFODNN7EXAMPLE
 Updating profile: default
-Made new key AKIAIOSFODNN7EXAMPLE
-Key rotated
+Deleting old access key
+Keys rotated
 ```
 
 #### To rotate a specific profile in your `~/.aws/credentials` file:
