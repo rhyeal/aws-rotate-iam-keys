@@ -161,7 +161,7 @@ EDITOR=nano crontab -e
 Look for a line like:
 
 ```
-33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily
 ```
 
 Edit the profile for the job if necessary. Add further jobs if you need to
@@ -244,7 +244,7 @@ EDITOR=nano crontab -e
 Copy and paste the following line into the end of the crontab file:
 
 ```
-33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily
+33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily
 ```
 
 Edit the profile for the job if necessary. Add further jobs if you need to
