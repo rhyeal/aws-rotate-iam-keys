@@ -113,6 +113,6 @@ if [[ "$CURRENT_KEY_ID" != "" ]]; then
     exit 1
   fi
 else
-  echo "Could not find current key. Please ensure you have a profile set up using `aws configure`." >&2
+  echo "Could not find current key. Please ensure you have a profile set up using 'aws configure'." >&2
   exit 1
 fi
