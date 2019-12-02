@@ -81,7 +81,7 @@ fi
 set -f; unset IFS             # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
 
-echo "Rotating iam keys for $PROFILES..."
+echo "Rotating keys for profiles: $PROFILES"
 
 echo "Verifying configuration"
 for i in "${!PROFILES_ARR[@]}"
