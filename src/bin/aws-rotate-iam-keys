@@ -80,7 +80,6 @@ fi
 
 set -f; unset IFS             # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
-FIRST_PROFILE=${PROFILES_ARR[0]}
 
 echo "Rotating iam keys for $PROFILES..."
 
@@ -88,29 +87,32 @@ echo "Verifying configuration"
 for i in "${!PROFILES_ARR[@]}"
 do
   ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
+  SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null)
   if [[ -z "$ACCESS_KEY_ID" ]]; then
     echo "Could not find key for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
     exit 1
   fi
-  FIRST_KEY_ID=${FIRST_KEY_ID:-$ACCESS_KEY_ID}
 done
 
+# Set AWS CLI env vars so we can interact with the API without using a profile,
+# which means we can delete the old access key *after* updating the profiles to
+# use the new access key, without having to wait for the new key to propagate
+export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+
 echo "Verifying credentials"
-KEY_COUNT=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq '.AccessKeyMetadata | length' || exit 1)
+KEY_COUNT=$(aws iam list-access-keys --output json | jq '.AccessKeyMetadata | length' || exit 1)
 if [[ "$KEY_COUNT" -gt "1" ]]; then
   echo "You have more than 1 active access key. Ensure you only have 1 active access key and try again."
   exit 1
 fi
 
 echo "Creating new access key"
-RESPONSE=$(aws iam create-access-key --output json --profile $FIRST_PROFILE | jq .AccessKey)
+RESPONSE=$(aws iam create-access-key --output json | jq .AccessKey)
 ACCESS_KEY=$(echo $RESPONSE | jq -r '.AccessKeyId')
 SECRET=$(echo $RESPONSE | jq -r '.SecretAccessKey')
 if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
   echo "Created new key $ACCESS_KEY"
-
-  echo "Deleting old access key"
-  aws iam delete-access-key --access-key-id $FIRST_KEY_ID --profile $FIRST_PROFILE
 
   # Rotate the keys in the credentials file for all profiles
   for i in "${!PROFILES_ARR[@]}"
@@ -119,6 +121,9 @@ if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
       aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
       aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
   done
+
+  echo "Deleting old access key"
+  aws iam delete-access-key --access-key-id $AWS_ACCESS_KEY_ID
 
   echo "Keys rotated"
   exit 0
