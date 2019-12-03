@@ -115,6 +115,7 @@ Creating new access key
 Created new key AKIAIOSFODNN7EXAMPLE
 Updating profile: default
 Deleting old access key
+Deleted old key AKIARCPUMEZ3BEXAMPLE
 Keys rotated
 ```
 

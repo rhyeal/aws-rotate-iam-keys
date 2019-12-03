@@ -125,6 +125,8 @@ if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
   echo "Deleting old access key"
   aws iam delete-access-key --access-key-id $AWS_ACCESS_KEY_ID
 
+  echo "Deleted old key $AWS_ACCESS_KEY_ID"
+
   echo "Keys rotated"
   exit 0
 else
