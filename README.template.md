@@ -22,9 +22,9 @@ synchronize your aws credentials across multiple computers. We've had success
 synchonzing credentials across multiple computers using both
 [SpiderOak](https://spideroak.com) and [Sync.com](https://sync.com), but YMMV.
 
-AWS Rotate IAM Keys also assumes you only have 1 active access key at a time.
-This is normal practice for IAM users. The maximum number of active keys is 2,
-and you need to be able to create a new key when rotating your access keys.
+AWS Rotate IAM Keys also assumes you only have 1 access key at a time. This is
+normal practice for IAM users. The maximum number of keys is 2, and you need to
+be able to create a new key when rotating your access keys.
 
 ## Installation
 
