@@ -103,7 +103,7 @@ export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
 echo "Verifying credentials"
 KEY_COUNT=$(aws iam list-access-keys --output json | jq '.AccessKeyMetadata | length' || exit 1)
 if [[ "$KEY_COUNT" -gt "1" ]]; then
-  echo "You have more than 1 active access key. Ensure you only have 1 active access key and try again."
+  echo "You have more than 1 access key. Ensure you only have 1 access key and try again."
   exit 1
 fi
 
