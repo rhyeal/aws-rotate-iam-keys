@@ -84,6 +84,7 @@ PROFILES_ARR=(${PROFILES//,/ })
 echo "Rotating keys for profiles: $PROFILES"
 
 echo "Verifying configuration"
+ACCESS_KEY_IDS=()
 for i in "${!PROFILES_ARR[@]}"
 do
   ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
@@ -92,7 +93,13 @@ do
     echo "Could not find keys for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
     exit 1
   fi
+  ACCESS_KEY_IDS+=($ACCESS_KEY_ID)
 done
+
+if [[ $(echo "${ACCESS_KEY_IDS[@]}" | tr ' ' '\n' | sort -u | wc -l) -ne "1" ]]; then
+  echo "Different access keys found for profiles ${PROFILES}. Check your aws profile configuration." >&2
+  exit 1
+fi
 
 # Set AWS CLI env vars so we can interact with the API without using a profile,
 # which means we can delete the old access key *after* updating the profiles to
