@@ -7,6 +7,19 @@ class AwsRotateIamKeys < Formula
   depends_on "gnu-getopt"
   depends_on "jq"
 
+  head do
+    Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '../'))) do
+      url %x{git config --local --get remote.origin.url | tr -d '\n'}, using: :git
+    end
+  end
+
+  devel do
+    Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '../'))) do
+      url %x{git config --local --get remote.origin.url | tr -d '\n'}, using: :git, branch: "develop"
+      version %x{git describe develop --always | tr -d '\n'}
+    end
+  end
+
   def install
     bin.install "src/bin/aws-rotate-iam-keys"
     (buildpath/"aws-rotate-iam-keys").write <<~EOS
