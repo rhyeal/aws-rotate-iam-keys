@@ -27,7 +27,7 @@ fi
 # -temporarily store output to be able to check for errors
 # -activate quoting/enhanced mode (e.g. by writing out “--options”)
 # -pass arguments only via   -- "$@"   to separate them correctly
-! PARSED=$(getopt --options=hvp: --longoptions=profile:,profiles:,version,help --name "$0" -- "$@")
+! PARSED=$(getopt --options=hvfp: --longoptions=force,profile:,profiles:,version,help --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
     # e.g. return value is 1
     #  then getopt has complained about wrong arguments to stdout
@@ -37,6 +37,7 @@ fi
 eval set -- "$PARSED"
 
 PROFILES=""
+FORCE=""
 # now enjoy the options in order and nicely split until we see --
 while true; do
     case "$1" in
@@ -47,6 +48,10 @@ while true; do
         -p|--profiles|--profile)
           PROFILES="$2"
           shift 2
+        ;;
+        -f|--force)
+          FORCE=true
+          shift
         ;;
         --version|-v)
           echo "AWS Rotate IAM Keys (c) 2018+ Adam Link."
@@ -97,8 +102,12 @@ do
 done
 
 if [[ $(echo "${ACCESS_KEY_IDS[@]}" | tr ' ' '\n' | sort -u | wc -l) -ne "1" ]]; then
-  echo "Different access keys found for profiles ${PROFILES}. Check your aws profile configuration." >&2
-  exit 1
+  if [[ $FORCE ]]; then
+    echo "Different access keys found for profiles ${PROFILES}. Force option enabled, so continuing anyway." >&2
+  else
+    echo "Different access keys found for profiles ${PROFILES}. Check your aws profile configuration." >&2
+    exit 1
+  fi
 fi
 
 # Set AWS CLI env vars so we can interact with the API without using a profile,
@@ -110,8 +119,18 @@ export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
 echo "Verifying credentials"
 KEY_COUNT=$(aws iam list-access-keys --output json | jq '.AccessKeyMetadata | length' || exit 1)
 if [[ "$KEY_COUNT" -gt "1" ]]; then
-  echo "You have more than 1 access key. Ensure you only have 1 access key and try again."
-  exit 1
+  if [[ $FORCE ]]; then
+    echo "More than 1 access key found. Force option enabled, so deleting unknown access keys"
+    KEYS=$(aws iam list-access-keys --output json | jq -r '.AccessKeyMetadata[].AccessKeyId' || exit 1)
+    for key in $KEYS; do
+      if [[ $key == $AWS_ACCESS_KEY_ID ]]; then continue; fi
+      aws iam delete-access-key --access-key-id $key
+      echo "Deleted unknown key $key"
+    done
+  else
+    echo "You have more than 1 access key. Ensure you only have 1 access key and try again."
+    exit 1
+  fi
 fi
 
 echo "Creating new access key"
