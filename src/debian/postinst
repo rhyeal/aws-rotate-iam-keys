@@ -28,7 +28,7 @@ fi
 if [[ "$MY_USER" != "" ]]; then
   IS_ENABLED=$(crontab -u $MY_USER -l | grep '/usr/bin/aws-rotate-iam-keys' | wc -l)
   if [[ "$IS_ENABLED" == 0 ]]; then
-    line="$((RANDOM%60)) 2 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null 2>&1 #rotate AWS keys daily"
+    line="$((RANDOM%60)) 2 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily"
     (crontab -u $MY_USER -l; echo "$line" ) | crontab -u $MY_USER -
   fi
 fi

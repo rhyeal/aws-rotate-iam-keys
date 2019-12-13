@@ -15,7 +15,10 @@ if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
     if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
         PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
     else
-        echo "I’m sorry, 'getopt --test' failed in this environment."
+        echo "GNU's enhanced getopt is required to run this script" >&2
+        echo "You can usually find this in the util-linux package" >&2
+        echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt" >&2
+        echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt" >&2
         exit 1
     fi
 fi
@@ -77,35 +80,63 @@ fi
 
 set -f; unset IFS             # avoid globbing (expansion of *).
 PROFILES_ARR=(${PROFILES//,/ })
-FIRST_PROFILE=${PROFILES_ARR[0]}
 
-CURRENT_KEY_ID=$(aws iam list-access-keys --output json --profile $FIRST_PROFILE | jq -r '.AccessKeyMetadata[0].AccessKeyId' || exit 1)
+echo "Rotating keys for profiles: $PROFILES"
 
-if [[ "$CURRENT_KEY_ID" != "" ]]; then
-  # Make a new key
-  echo "Making new access key"
-  RESPONSE=$(aws iam create-access-key --output json --profile $FIRST_PROFILE | jq .AccessKey)
-  ACCESS_KEY=$(echo $RESPONSE | jq -r '.AccessKeyId')
-  SECRET=$(echo $RESPONSE | jq -r '.SecretAccessKey')
-  if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
-    aws iam delete-access-key --access-key-id $CURRENT_KEY_ID --profile ${PROFILES_ARR[0]}
-
-    # Rotate the keys in the credentials file for all profiles
-    for i in "${!PROFILES_ARR[@]}"
-    do
-        echo "Updating profile: ${PROFILES_ARR[i]}"
-        aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
-        aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
-    done
-
-    echo "Made new key $ACCESS_KEY"
-    echo "Key rotated"
-    exit 0
-  else
-    echo "Could not create access key. Ensure you only have 1 active access key in your IAM profile."
+echo "Verifying configuration"
+ACCESS_KEY_IDS=()
+for i in "${!PROFILES_ARR[@]}"
+do
+  ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
+  SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null)
+  if [[ -z "$ACCESS_KEY_ID" ]] || [[ -z "$SECRET_ACCESS_KEY" ]]; then
+    echo "Could not find keys for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
     exit 1
   fi
+  ACCESS_KEY_IDS+=($ACCESS_KEY_ID)
+done
+
+if [[ $(echo "${ACCESS_KEY_IDS[@]}" | tr ' ' '\n' | sort -u | wc -l) -ne "1" ]]; then
+  echo "Different access keys found for profiles ${PROFILES}. Check your aws profile configuration." >&2
+  exit 1
+fi
+
+# Set AWS CLI env vars so we can interact with the API without using a profile,
+# which means we can delete the old access key *after* updating the profiles to
+# use the new access key, without having to wait for the new key to propagate
+export AWS_ACCESS_KEY_ID=$ACCESS_KEY_ID
+export AWS_SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY
+
+echo "Verifying credentials"
+KEY_COUNT=$(aws iam list-access-keys --output json | jq '.AccessKeyMetadata | length' || exit 1)
+if [[ "$KEY_COUNT" -gt "1" ]]; then
+  echo "You have more than 1 access key. Ensure you only have 1 access key and try again."
+  exit 1
+fi
+
+echo "Creating new access key"
+RESPONSE=$(aws iam create-access-key --output json | jq .AccessKey)
+ACCESS_KEY=$(echo $RESPONSE | jq -r '.AccessKeyId')
+SECRET=$(echo $RESPONSE | jq -r '.SecretAccessKey')
+if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
+  echo "Created new key $ACCESS_KEY"
+
+  # Rotate the keys in the credentials file for all profiles
+  for i in "${!PROFILES_ARR[@]}"
+  do
+      echo "Updating profile: ${PROFILES_ARR[i]}"
+      aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
+      aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
+  done
+
+  echo "Deleting old access key"
+  aws iam delete-access-key --access-key-id $AWS_ACCESS_KEY_ID
+
+  echo "Deleted old key $AWS_ACCESS_KEY_ID"
+
+  echo "Keys rotated"
+  exit 0
 else
-  echo "Could not find current key. Please ensure you have a profile set up using `aws configure`."
+  echo "Failed to create access key. Please correct reported errors and try again." >&2
   exit 1
 fi
