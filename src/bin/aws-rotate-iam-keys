@@ -90,8 +90,7 @@ echo "Rotating keys for profiles: $PROFILES"
 
 echo "Verifying configuration"
 ACCESS_KEY_IDS=()
-for i in "${!PROFILES_ARR[@]}"
-do
+for i in "${!PROFILES_ARR[@]}"; do
   ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
   SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null)
   if [[ -z "$ACCESS_KEY_ID" ]] || [[ -z "$SECRET_ACCESS_KEY" ]]; then
@@ -141,8 +140,7 @@ if [[ "$ACCESS_KEY" != "" && "$SECRET" != "" ]]; then
   echo "Created new key $ACCESS_KEY"
 
   # Rotate the keys in the credentials file for all profiles
-  for i in "${!PROFILES_ARR[@]}"
-  do
+  for i in "${!PROFILES_ARR[@]}"; do
     echo "Updating profile: ${PROFILES_ARR[i]}"
     aws configure set aws_access_key_id $ACCESS_KEY --profile ${PROFILES_ARR[i]}
     aws configure set aws_secret_access_key $SECRET --profile ${PROFILES_ARR[i]}
