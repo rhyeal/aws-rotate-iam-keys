@@ -57,7 +57,7 @@ class AwsRotateIamKeys < Formula
       <array>
         <string>/bin/bash</string>
         <string>-c</string>
-        <string>if ! curl -s www.google.com > /dev/null; then sleep 60; fi; cp /dev/null /tmp/#{plist_name}.log ; ( cat ~/.aws-rotate-iam-keys 2>/dev/null || cat #{etc}/aws-rotate-iam-keys ) | while read line; do aws-rotate-iam-keys $line; done</string>
+        <string>if ! curl -s www.google.com > /dev/null; then sleep 60; fi; cp /dev/null /tmp/#{plist_name}.log ; ( egrep '^[[:space:]]*-' ~/.aws-rotate-iam-keys 2>/dev/null || cat #{etc}/aws-rotate-iam-keys ) | while read line; do aws-rotate-iam-keys $line; done</string>
       </array>
       <key>StandardOutPath</key>
       <string>/tmp/#{plist_name}.log</string>
