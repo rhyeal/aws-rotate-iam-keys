@@ -12,15 +12,15 @@ IFS=$'\n\t'
 
 ! getopt --test > /dev/null
 if [[ ${PIPESTATUS[0]} -ne 4 ]]; then
-    if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
-        PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
-    else
-        echo "GNU's enhanced getopt is required to run this script" >&2
-        echo "You can usually find this in the util-linux package" >&2
-        echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt" >&2
-        echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt" >&2
-        exit 1
-    fi
+  if which brew &> /dev/null && test -d $(brew --prefix)/opt/gnu-getopt/bin; then
+    PATH="$(brew --prefix)/opt/gnu-getopt/bin:$PATH"
+  else
+    echo "GNU's enhanced getopt is required to run this script" >&2
+    echo "You can usually find this in the util-linux package" >&2
+    echo "On MacOS see homebrew's package: http://brewformulas.org/Gnu-getopt" >&2
+    echo "For anyone else, build from source: http://frodo.looijaard.name/project/getopt" >&2
+    exit 1
+  fi
 fi
 
 # -use ! and PIPESTATUS to get exit code with errexit set
@@ -29,9 +29,9 @@ fi
 # -pass arguments only via   -- "$@"   to separate them correctly
 ! PARSED=$(getopt --options=hvfp: --longoptions=force,profile:,profiles:,version,help --name "$0" -- "$@")
 if [[ ${PIPESTATUS[0]} -ne 0 ]]; then
-    # e.g. return value is 1
-    #  then getopt has complained about wrong arguments to stdout
-    exit 2
+  # e.g. return value is 1
+  #  then getopt has complained about wrong arguments to stdout
+  exit 2
 fi
 # read getopt’s output this way to handle the quoting right:
 eval set -- "$PARSED"
@@ -40,47 +40,47 @@ PROFILES=""
 FORCE=""
 # now enjoy the options in order and nicely split until we see --
 while true; do
-    case "$1" in
-        --)
-          shift
-          break
-          ;;
-        -p|--profiles|--profile)
-          PROFILES="$2"
-          shift 2
-        ;;
-        -f|--force)
-          FORCE=true
-          shift
-        ;;
-        --version|-v)
-          echo "AWS Rotate IAM Keys (c) 2018+ Adam Link."
-          echo "Licensed under the GNU General Public License."
-          echo "Thanks to all the contributors!"
-          echo "version <<VERSION>>"
-          exit 0
-        ;;
-        --help|-h)
-          echo "To rotate your default profile manually:"
-          echo '$ aws-rotate-iam-keys'
-          echo ""
-          echo "To rotate a specific profile in your ~/.aws/credentials file:"
-          echo '$ aws-rotate-iam-keys --profile myProfile'
-          echo ""
-          echo "To rotate multiple profiles *with the same key*:"
-          echo '$ aws-rotate-iam-keys --profiles myProfile,myOtherProfile'
-          echo ""
-          echo "To rotate multiple profiles *with their own keys*:"
-          echo '$ aws-rotate-iam-keys --profile myProfile'
-          echo '$ aws-rotate-iam-keys --profile myOtherProfile'
-          exit 0
-        ;;
-    esac
+  case "$1" in
+    --)
+      shift
+      break
+      ;;
+    -p|--profiles|--profile)
+      PROFILES="$2"
+      shift 2
+      ;;
+    -f|--force)
+      FORCE=true
+      shift
+      ;;
+    --version|-v)
+      echo "AWS Rotate IAM Keys (c) 2018+ Adam Link."
+      echo "Licensed under the GNU General Public License."
+      echo "Thanks to all the contributors!"
+      echo "version <<VERSION>>"
+      exit 0
+      ;;
+    --help|-h)
+      echo "To rotate your default profile manually:"
+      echo '$ aws-rotate-iam-keys'
+      echo ""
+      echo "To rotate a specific profile in your ~/.aws/credentials file:"
+      echo '$ aws-rotate-iam-keys --profile myProfile'
+      echo ""
+      echo "To rotate multiple profiles *with the same key*:"
+      echo '$ aws-rotate-iam-keys --profiles myProfile,myOtherProfile'
+      echo ""
+      echo "To rotate multiple profiles *with their own keys*:"
+      echo '$ aws-rotate-iam-keys --profile myProfile'
+      echo '$ aws-rotate-iam-keys --profile myOtherProfile'
+      exit 0
+      ;;
+  esac
 done
 
 # Set the profile to default if nothing sent via CLI
 if [[ -z "$PROFILES" ]]; then
-	PROFILES=default
+  PROFILES=default
 fi
 
 set -f; unset IFS             # avoid globbing (expansion of *).
@@ -90,8 +90,7 @@ echo "Rotating keys for profiles: $PROFILES"
 
 echo "Verifying configuration"
 ACCESS_KEY_IDS=()
-for i in "${!PROFILES_ARR[@]}"
-do
+for i in "${!PROFILES_ARR[@]}"; do
   ACCESS_KEY_ID=$(aws configure get ${PROFILES_ARR[i]}.aws_access_key_id 2>/dev/null)
   SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null)
   if [[ -z "$ACCESS_KEY_ID" ]] || [[ -z "$SECRET_ACCESS_KEY" ]]; then
