@@ -1,3 +1,16 @@
+aws-rotate-iam-keys (0.9.5) bionic; urgency=medium
+
+  * Multiple PRs from mmrwoods
+  * Verify new access key before updating credentials
+  * Allow whitespace in homebrew config
+  * Code formatting
+  * Allow unstable and forked versions
+  * Adding force rotate keys
+  * Improved error handling
+  * Skip install awscli and python where appropriate
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Mon, 27 Jan 2020 12:06:23 -0900
+
 aws-rotate-iam-keys (0.9.2) bionic; urgency=medium
 
   * Merged in PRs for raw output of jq and wget option on website
