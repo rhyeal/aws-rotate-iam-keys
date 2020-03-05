@@ -16,7 +16,7 @@ class AwsRotateIamKeys < Formula
   devel do
     Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '../'))) do
       url %x{git config --local --get remote.origin.url | tr -d '\n'}, using: :git, branch: "develop"
-      version %x{git describe develop --always | tr -d '\n'}
+      version "head"
     end
   end
 
