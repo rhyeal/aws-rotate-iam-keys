@@ -25,12 +25,6 @@ references:
         - v1-repo-{{ .Branch }}
         - v1-repo
 
-  load_version: &load_version
-    run:
-      name: Load version from file
-      command: |
-        echo "export VERSION=$(head -1 ~/repo/VERSION)" >> $BASH_ENV
-
 jobs:
   checkout_code:
     <<: *container_config
@@ -46,30 +40,27 @@ jobs:
     <<: *container_config
     steps:
       - *restore_repo
-      - *load_version
       - aws-cli/install
       - run:
           name: Change the website
           command: |
             # version swap the website
-            echo $VERSION
-            echo $CIRCLE_TAG # use this instead as the version
-            #sudo apt-get install gettext-base
-            #envsubst < website/index.template.html > website/index.html
-            #aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read
-            #aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
+            VERSION=$(head -1 $(pwd)/VERSION)
+            sudo apt-get -y install gettext-base
+            envsubst < website/index.template.html > website/index.html
+            aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --dryrun
+            aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --dryrun
 
   build:
     <<: *container_config
     steps:
       - *restore_repo
-      - *load_version
       - run:
           name: Build the .deb package
           command: |
             PKG_NAME="aws-rotate-iam-keys"
             PKG_DESCRIPTION="Get secure with automatic IAM key rotation"
-            PKG_VERSION="$VERSION"
+            PKG_VERSION=$(head -1 $(pwd)/VERSION)
             PKG_RELEASE="0"
             PKG_MAINTAINER="Adam Link \<aws-rotate-iam-keys@rhyeal.com\>"
             PKG_ARCH="all"
@@ -77,28 +68,32 @@ jobs:
             PKG_DEB="${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb"
             FPM_OPTS="-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)"
 
-            sudo gem install fpm
-            echo $VERSION
-            echo $CIRCLE_TAG # use this instead as the version
-            #sudo apt-get update
-            #sudo apt install devscripts
-            # make the dist folder
-            mkdir -p dist
-            # copy in the src and swap the versions
-            cp -r src/** dist/
-            sed "s/<%VERSION%>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+            env
 
-            CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
-            # make the homebrew zip file
-            zip -r ${PKG_NAME}_${VERSION}.zip dist
+            exit 99
 
-            fpm -t deb -p $(PKG_DEB) $(FPM_OPTS) \
-            -d awscli \
-            -d bash \
-            -d jq \
-            --after-install postinst \
-            --before-remove prerm \
-            dist
+            # sudo gem install fpm
+            # echo $VERSION
+            # echo $CIRCLE_TAG # use this instead as the version
+            # #sudo apt-get update
+            # #sudo apt install devscripts
+            # # make the dist folder
+            # mkdir -p dist
+            # # copy in the src and swap the versions
+            # cp -r src/** dist/
+            # sed "s/<%VERSION%>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+
+            # CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
+            # # make the homebrew zip file
+            # zip -r ${PKG_NAME}_${VERSION}.zip dist
+
+            # fpm -t deb -p $(PKG_DEB) $(FPM_OPTS) \
+            # -d awscli \
+            # -d bash \
+            # -d jq \
+            # --after-install postinst \
+            # --before-remove prerm \
+            # dist
       - persist_to_workspace:
           root: ~/repo
           paths: .
@@ -118,10 +113,10 @@ workflows:
   build_and_deploy:
     jobs:
       - checkout_code
-      #- build:
-      #    context: Personal_AWS
-      #    requires:
-      #      - checkout_code
+      - build:
+          context: Personal_AWS
+          requires:
+            - checkout_code
       # - test:
       #     context: Personal_AWS
       #     requires:
