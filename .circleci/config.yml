@@ -118,10 +118,10 @@ workflows:
   build_and_deploy:
     jobs:
       - checkout_code
-      - build:
-          context: Personal_AWS
-          requires:
-            - checkout_code
+      #- build:
+      #    context: Personal_AWS
+      #    requires:
+      #      - checkout_code
       # - test:
       #     context: Personal_AWS
       #     requires:
