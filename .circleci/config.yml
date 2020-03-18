@@ -10,13 +10,136 @@ version: 2.1
 # push the new checksum to the repo master branch
 
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
+  aws-cli: airswap/aws-cli@volatile
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
+references:
+  container_config: &container_config
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/repo
+
+  restore_repo: &restore_repo
+    restore_cache:
+      keys:
+        - v1-repo-{{ .Branch }}-{{ .Revision }}
+        - v1-repo-{{ .Branch }}
+        - v1-repo
+
+  load_version: &load_version
+    run:
+      name: Load version from file
+      command: |
+        echo "export VERSION=$(head -1 ~/repo/VERSION)" >> $BASH_ENV
+
+jobs:
+  checkout_code:
+    <<: *container_config
+    steps:
+      - checkout:
+          path: ~/repo
+      - save_cache:
+          key: v1-repo-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .
+
+  change_website:
+    <<: *container_config
+    steps:
+      - *restore_repo
+      - *load_version
+      - aws-cli/install
+      - run:
+          name: Change the website
+          command: |
+            # version swap the website
+            echo $VERSION
+            echo $CIRCLE_TAG # use this instead as the version
+            #sudo apt-get install gettext-base
+            #envsubst < website/index.template.html > website/index.html
+            #aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read
+            #aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --acl public-read
+
+  build:
+    <<: *container_config
+    steps:
+      - *restore_repo
+      - *load_version
+      - run:
+          name: Build the .deb package
+          command: |
+            PKG_NAME="aws-rotate-iam-keys"
+            PKG_DESCRIPTION="Get secure with automatic IAM key rotation"
+            PKG_VERSION="$VERSION"
+            PKG_RELEASE="0"
+            PKG_MAINTAINER="Adam Link \<aws-rotate-iam-keys@rhyeal.com\>"
+            PKG_ARCH="all"
+            TMPINSTALLDIR="/tmp/$(PKG_NAME)-fpm-install"
+            PKG_DEB="${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb"
+            FPM_OPTS="-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)"
+
+            sudo gem install fpm
+            echo $VERSION
+            echo $CIRCLE_TAG # use this instead as the version
+            #sudo apt-get update
+            #sudo apt install devscripts
+            # make the dist folder
+            mkdir -p dist
+            # copy in the src and swap the versions
+            cp -r src/** dist/
+            sed "s/<%VERSION%>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+
+            CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
+            # make the homebrew zip file
+            zip -r ${PKG_NAME}_${VERSION}.zip dist
+
+            fpm -t deb -p $(PKG_DEB) $(FPM_OPTS) \
+            -d awscli \
+            -d bash \
+            -d jq \
+            --after-install postinst \
+            --before-remove prerm \
+            dist
+      - persist_to_workspace:
+          root: ~/repo
+          paths: .
+
+
+  test:
+    <<: *container_config
+    steps:
+      - *restore_repo
+
+  release:
+    <<: *container_config
+    steps:
+      - *restore_repo
+
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  build_and_deploy:
     jobs:
-      - welcome/run
+      - checkout_code
+      - build:
+          context: Personal_AWS
+          requires:
+            - checkout_code
+      # - test:
+      #     context: Personal_AWS
+      #     requires:
+      #       - build
+      # - release:
+      #     context: Personal_AWS
+      #     requires:
+      #       - test
+      #     filters:
+      #         tags:
+      #           only: /^v.*/
+      #         branches:
+      #           ignore: /.*/
+      - change_website:
+          context: Personal_AWS
+          requires:
+            - checkout_code
+          filters:
+            branches:
+              only:
+                - circleci-take2
