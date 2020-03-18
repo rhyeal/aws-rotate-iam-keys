@@ -285,6 +285,10 @@ Visit us on the web at
 instructions in a snazzy single-page UI. It's basically this README with some
 colors.
 
+### Get In Touch
+
+Did you open a PR or find a bug and more than a few days have passed? Hit me up on email at **awsRotateKeys@rhyeal.com** and I'll address the issue promptly!
+
 ## Checksums
 
 ### Ubuntu/Debian
