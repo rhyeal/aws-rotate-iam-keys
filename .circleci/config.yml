@@ -193,7 +193,7 @@ jobs:
 
             # update homebrew SHA in Formula file
             cd Formula
-            envsubst < aws-rotate-iam-keys.template.rb > aws-rotate-iam-keys.rb
+            envsubst  < aws-rotate-iam-keys.template.rb | sed -e 's/§/$/g' > aws-rotate-iam-keys.rb # change up the § for a $ in the $line line
             cd ..
 
             # update the readme
