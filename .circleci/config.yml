@@ -25,6 +25,12 @@ references:
         - v1-repo-{{ .Branch }}
         - v1-repo
 
+  setup_disclaimer: &setup_disclaimer
+    run:
+      name: set up repo
+      command: |
+        echo "export TEMPLATE_DISCLAIMER='This is an auto-generated file. Please make changes to the file with .template. in the name.'' >> $BASH_ENV
+
 jobs:
   checkout_code:
     <<: *container_config
@@ -56,6 +62,8 @@ jobs:
     steps:
       - *restore_repo
       - aws-cli/install
+      - add_ssh_keys
+      - *setup_disclaimer
       - run:
           name: Build the .deb package
           command: |
@@ -92,27 +100,58 @@ jobs:
             # let's grab that signing key now
             aws s3 cp s3://rhyeal-ppa-signing-keys/my_secret_signing_key.asc ~/my_secret_signing_key.asc
             gpg --import ~/my_secret_signing_key.asc
+            cd ..
             debsign -k 008A79BDFBCF3348 ${CHANGES}
 
-            cd ..
             dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
-            #cp dist/debian/changelog src/debian/changelog
-            #rm -rf dist
+            cp dist/debian/changelog src/debian/changelog
+            rm -rf dist
+
+            # put the .zip, the .tar.gz, the .deb, and the README.md back to GH
+            git add *${VERSION}.deb
+            git add *${VERSION}.zip
+            git add *${VERSION}.tar.gz
+            git add src/debian/changelog
+
+            # [ci skip] to message
+            git commit -m "[ci skip] adding built files from CI server"
+
+            git push --set-upstream origin ${CIRCLE_BRANCH}
+      - run:
+          name: Tag new release
+          command: |
+            export VERSION=$(head -1 $(pwd)/VERSION)
+            #git tag -a v${VERSION} -m "Version ${VERSION}"
+            #git push origin v${VERSION}
+
+            # h/t https://github.com/github/hub/issues/718#issuecomment-400430284
+            HUB_DIST=linux-amd64 HUB_VERSION=`curl -w "%{url_effective}\n" -I -L -s -S github.com/github/hub/releases/latest -o /dev/null | awk -F'releases/tag/v' '{ print $2 }'`; curl "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-$HUB_DIST-$HUB_VERSION.tgz" -L | tar xvz && sudo ./hub-$HUB_DIST-$HUB_VERSION/install && rm -r ./hub-$HUB_DIST-$HUB_VERSION
+
+            hub release create -m "Version ${VERSION}" v${VERSION}
+
+            export HOMEBREW_URL="https://github.com/rhyeal/aws-rotate-iam-keys/archive/v${VERSION}.tar.gz"
+
+            sleep 5s # make sure the URL is there
+
+            wget $HOMEBREW_URL -O aws-rotate-iam-keys-${VERSION}.tar.gz
+            export HOMEBREW_SHA="$(sha256sum aws-rotate-iam-keys-${VERSION}.tar.gz | cut -d ' ' -f 1)"
+
+            # update homebrew SHA in Formula file
+            cd Formula
+            envsubst < aws-rotate-iam-keys.template.rb > aws-rotate-iam-keys.rb
+            cd ..
 
             # update the readme
             export WIN_MD5=$(md5sum Windows/aws-rotate-iam-keys.ps1)
             export LINUX_MD5=$(md5sum aws-rotate-iam-keys.${VERSION}.deb | cut -c 1-32)
             envsubst < README.template.md > README.md
 
-            # put the .zip, the .tar.gz, the .deb, and the README.md back to GH
-            git add *${VERSION}.deb
-            git add *${VERSION}.zip
-            git add *${VERSION}.tar.gz
             git add README.md
+            git add Formula/aws-rotate-iam-keys.rb
 
-            # [ci skip] to message
-            git commit -m "[ci skip] adding built files from CI server"
+            git commit -m "[ci skip] Update Homebrew file and hashes"
 
+            git push --set-upstream origin ${CIRCLE_BRANCH}
       - persist_to_workspace:
           root: ~/repo
           paths: .
