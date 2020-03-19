@@ -55,45 +55,53 @@ jobs:
     <<: *container_config
     steps:
       - *restore_repo
+      - aws-cli/install
       - run:
           name: Build the .deb package
           command: |
-            PKG_NAME="aws-rotate-iam-keys"
-            PKG_DESCRIPTION="Get secure with automatic IAM key rotation"
-            PKG_VERSION=$(head -1 $(pwd)/VERSION)
-            PKG_RELEASE="0"
-            PKG_MAINTAINER="Adam Link \<aws-rotate-iam-keys@rhyeal.com\>"
-            PKG_ARCH="all"
-            TMPINSTALLDIR="/tmp/$(PKG_NAME)-fpm-install"
-            PKG_DEB="${PKG_NAME}_${PKG_VERSION}-${PKG_RELEASE}_${PKG_ARCH}.deb"
-            FPM_OPTS="-s dir -n $(PKG_NAME) -v $(PKG_VERSION) --iteration $(PKG_RELEASE) -C $(TMPINSTALLDIR) --maintainer ${PKG_MAINTAINER} --description $(PKG_DESCRIPTION) -a $(PKG_ARCH)"
+            export VERSION=$(head -1 $(pwd)/VERSION)
+            # make the dist folder
+            mkdir -p dist
+            # copy in the src and swap the versions
+            cp -r src/** dist/
+            sed "s/<<VERSION>>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
 
-            env
+            CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
 
-            exit 99
+            zip -r aws-rotate-iam-keys_${VERSION}.zip dist
 
-            # sudo gem install fpm
-            # echo $VERSION
-            # echo $CIRCLE_TAG # use this instead as the version
-            # #sudo apt-get update
-            # #sudo apt install devscripts
-            # # make the dist folder
-            # mkdir -p dist
-            # # copy in the src and swap the versions
-            # cp -r src/** dist/
-            # sed "s/<%VERSION%>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+            # make the changelog
+            cd dist
+            sudo apt-get update
+            sudo apt-get -y install devscripts build-essential dh-make debhelper
+            DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" dch -v $VERSION --distribution bionic --force-distribution "See release notes on GitHub"
 
-            # CHANGES="aws-rotate-iam-keys_$VERSION~bionic1_source.changes"
-            # # make the homebrew zip file
-            # zip -r ${PKG_NAME}_${VERSION}.zip dist
+            mv debian DEBIAN
+            envsubst < DEBIAN/control-debian > DEBIAN/control
 
-            # fpm -t deb -p $(PKG_DEB) $(FPM_OPTS) \
-            # -d awscli \
-            # -d bash \
-            # -d jq \
-            # --after-install postinst \
-            # --before-remove prerm \
-            # dist
+            # make the Debian .deb
+            dpkg-deb --build . ../aws-rotate-iam-keys.${VERSION}.deb
+
+            rm DEBIAN/control
+            mv DEBIAN debian
+            envsubst < debian/control-ubuntu > debian/control
+
+            # make unsigned changes
+            DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa -us -uc
+
+            cd ..
+            #dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES # don't put to PPA for now
+            #cp dist/debian/changelog src/debian/changelog
+            #rm -rf dist
+
+            # update the readme
+            export WIN_MD5=$(md5sum Windows/aws-rotate-iam-keys.ps1)
+            export LINUX_MD5=$(md5sum aws-rotate-iam-keys.${VERSION}.deb | cut -c 1-32)
+            envsubst < README.template.md > README.md
+
+            exit 99 # and exit failing for now
+
+            # put this back to GH...
       - persist_to_workspace:
           root: ~/repo
           paths: .
