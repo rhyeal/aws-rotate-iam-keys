@@ -54,8 +54,8 @@ jobs:
             VERSION=$(head -1 $(pwd)/VERSION)
             sudo apt-get -y install gettext-base
             envsubst < website/index.template.html > website/index.html
-            aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --dryrun
-            aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1 --dryrun
+            aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete
+            aws s3 cp ./Windows/aws-rotate-iam-keys.ps1 s3://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1
 
   build:
     <<: *container_config
@@ -220,14 +220,26 @@ workflows:
           context: Personal_AWS
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - master
       - tag_release:
           context: Personal_AWS
           requires:
             - release
+          filters:
+            branches:
+              only:
+                - master
       - homebrew:
           context: Personal_AWS
           requires:
             - tag_release
+          filters:
+            branches:
+              only:
+                - master
       - change_website:
           context: Personal_AWS
           requires:
@@ -235,4 +247,4 @@ workflows:
           filters:
             branches:
               only:
-                - circleci-take2
+                - master
