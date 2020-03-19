@@ -1,8 +1,12 @@
+=begin
+This is an auto-generated file. Please make changes to the file with .template. in the name.
+=end
+
 class AwsRotateIamKeys < Formula
   desc "Automatically rotate your IAM keys daily"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.5.tar.gz"
-  sha256 "7c80a967b615ae75f6137c1200458f9d60a49ffe3630be2ff8f9161b4fb97c1c"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.6.5.tar.gz"
+  sha256 "feb865a31bf40b1f2e189d99aa55becd7cf1f0203b2a33d68394870ed9933fe5"
   depends_on "awscli" => :recommended
   depends_on "gnu-getopt"
   depends_on "jq"
@@ -70,7 +74,7 @@ class AwsRotateIamKeys < Formula
       <array>
         <string>/bin/bash</string>
         <string>-c</string>
-        <string>if ! curl -s www.google.com > /dev/null; then sleep 60; fi; cp /dev/null /tmp/#{plist_name}.log ; ( egrep '^[[:space:]]*-' ~/.aws-rotate-iam-keys 2>/dev/null || cat #{etc}/aws-rotate-iam-keys ) | while read line; do aws-rotate-iam-keys $line; done</string>
+        <string>if ! curl -s www.google.com > /dev/null; then sleep 60; fi; cp /dev/null /tmp/#{plist_name}.log ; ( egrep '^[[:space:]]*-' ~/.aws-rotate-iam-keys 2>/dev/null || cat #{etc}/aws-rotate-iam-keys ) | while read line; do aws-rotate-iam-keys ; done</string>
       </array>
       <key>StandardOutPath</key>
       <string>/tmp/#{plist_name}.log</string>
