@@ -192,9 +192,7 @@ jobs:
             export HOMEBREW_SHA="$(sha256sum aws-rotate-iam-keys-${VERSION}.tar.gz | cut -d ' ' -f 1)"
 
             # update homebrew SHA in Formula file
-            cd Formula
-            envsubst  < aws-rotate-iam-keys.template.rb | sed -e 's/§/$/g' > aws-rotate-iam-keys.rb # change up the § for a $ in the $line line
-            cd ..
+            envsubst  < aws-rotate-iam-keys.template.rb | sed -e 's/§/$/g' > Formula/aws-rotate-iam-keys.rb # change up the § for a $ in the $line line
 
             # update the readme
             export WIN_MD5=$(md5sum Windows/aws-rotate-iam-keys.ps1)

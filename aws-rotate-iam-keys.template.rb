@@ -1,5 +1,6 @@
 =begin
 ${TEMPLATE_DISCLAIMER}
+Hint: Look in the project root folder for the template file
 =end
 
 class AwsRotateIamKeys < Formula
