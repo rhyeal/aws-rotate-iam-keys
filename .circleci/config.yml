@@ -89,8 +89,13 @@ jobs:
             # make unsigned changes
             DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa -us -uc
 
+            # let's grab that signing key now
+            aws s3 cp s3://rhyeal-ppa-signing-keys/my_secret_signing_key.asc ~/my_secret_signing_key.asc
+            gpg --import ~/my_secret_signing_key.asc
+            debsign -k 008A79BDFBCF3348 ${CHANGES}
+
             cd ..
-            #dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES # don't put to PPA for now
+            dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
             #cp dist/debian/changelog src/debian/changelog
             #rm -rf dist
 
@@ -99,9 +104,15 @@ jobs:
             export LINUX_MD5=$(md5sum aws-rotate-iam-keys.${VERSION}.deb | cut -c 1-32)
             envsubst < README.template.md > README.md
 
-            exit 99 # and exit failing for now
+            # put the .zip, the .tar.gz, the .deb, and the README.md back to GH
+            git add *${VERSION}.deb
+            git add *${VERSION}.zip
+            git add *${VERSION}.tar.gz
+            git add README.md
 
-            # put this back to GH...
+            # [ci skip] to message
+            git commit -m "[ci skip] adding built files from CI server"
+
       - persist_to_workspace:
           root: ~/repo
           paths: .
