@@ -68,6 +68,7 @@ jobs:
           name: Build the .deb package
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
+            sudo apt-get -y install gettext-base
             # make the dist folder
             mkdir -p dist
             # copy in the src and swap the versions
@@ -143,7 +144,7 @@ jobs:
       - persist_to_workspace:
             root: ~/repo
             paths: .
-  homebrew:
+  tag_release:
     <<: *container_config
     steps:
       - attach_workspace:
@@ -165,9 +166,24 @@ jobs:
             HUB_DIST=linux-amd64 HUB_VERSION=`curl -w "%{url_effective}\n" -I -L -s -S github.com/github/hub/releases/latest -o /dev/null | awk -F'releases/tag/v' '{ print $2 }'`; curl "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-$HUB_DIST-$HUB_VERSION.tgz" -L | tar xvz && sudo ./hub-$HUB_DIST-$HUB_VERSION/install && rm -r ./hub-$HUB_DIST-$HUB_VERSION
 
             hub release create -m "Version ${VERSION}" v${VERSION}
+      - persist_to_workspace:
+            root: ~/repo
+            paths: .
+  homebrew:
+    <<: *container_config
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - aws-cli/install
+      - add_ssh_keys
+      - *setup_disclaimer
+      - run:
+          name: add ssh key to known hosts
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
       - run:
           name: Update Homebrew Formula
           command: |
+            sudo apt-get -y install gettext-base
             export VERSION=$(head -1 $(pwd)/VERSION)
             export HOMEBREW_URL="https://github.com/rhyeal/aws-rotate-iam-keys/archive/v${VERSION}.tar.gz"
             sleep 5s # make sure the URL is there
@@ -204,10 +220,14 @@ workflows:
           context: Personal_AWS
           requires:
             - build
-      - homebrew:
+      - tag_release:
           context: Personal_AWS
           requires:
             - release
+      - homebrew:
+          context: Personal_AWS
+          requires:
+            - tag_release
       - change_website:
           context: Personal_AWS
           requires:
