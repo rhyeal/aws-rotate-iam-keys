@@ -29,7 +29,7 @@ references:
     run:
       name: set up repo
       command: |
-        echo "export TEMPLATE_DISCLAIMER='This is an auto-generated file. Please make changes to the file with .template. in the name.'' >> $BASH_ENV
+        echo "export TEMPLATE_DISCLAIMER='This is an auto-generated file. Please make changes to the file with .template. in the name.' >> $BASH_ENV
 
 jobs:
   checkout_code:
@@ -102,7 +102,21 @@ jobs:
             gpg --import ~/my_secret_signing_key.asc
             cd ..
             debsign -k 008A79BDFBCF3348 ${CHANGES}
-
+      - persist_to_workspace:
+            root: ~/repo
+            paths: .
+  release:
+    <<: *container_config
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - aws-cli/install
+      - add_ssh_keys
+      - *setup_disclaimer
+      - run:
+          name: Release the .deb package
+          command: |
+            export VERSION=$(head -1 $(pwd)/VERSION)
             dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
             cp dist/debian/changelog src/debian/changelog
             rm -rf dist
@@ -117,8 +131,19 @@ jobs:
             git commit -m "[ci skip] adding built files from CI server"
 
             git push --set-upstream origin ${CIRCLE_BRANCH}
+      - persist_to_workspace:
+            root: ~/repo
+            paths: .
+  homebrew:
+    <<: *container_config
+    steps:
+      - attach_workspace:
+          at: ~/repo
+      - aws-cli/install
+      - add_ssh_keys
+      - *setup_disclaimer
       - run:
-          name: Tag new release
+          name: Tag new release & Homebrew Update
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
             #git tag -a v${VERSION} -m "Version ${VERSION}"
@@ -152,20 +177,6 @@ jobs:
             git commit -m "[ci skip] Update Homebrew file and hashes"
 
             git push --set-upstream origin ${CIRCLE_BRANCH}
-      - persist_to_workspace:
-          root: ~/repo
-          paths: .
-
-
-  test:
-    <<: *container_config
-    steps:
-      - *restore_repo
-
-  release:
-    <<: *container_config
-    steps:
-      - *restore_repo
 
 workflows:
   build_and_deploy:
@@ -175,19 +186,14 @@ workflows:
           context: Personal_AWS
           requires:
             - checkout_code
-      # - test:
-      #     context: Personal_AWS
-      #     requires:
-      #       - build
-      # - release:
-      #     context: Personal_AWS
-      #     requires:
-      #       - test
-      #     filters:
-      #         tags:
-      #           only: /^v.*/
-      #         branches:
-      #           ignore: /.*/
+      - release:
+          context: Personal_AWS
+          requires:
+            - build
+      - homebrew:
+          context: Personal_AWS
+          requires:
+            - release
       - change_website:
           context: Personal_AWS
           requires:
