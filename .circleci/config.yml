@@ -165,12 +165,11 @@ jobs:
             HUB_DIST=linux-amd64 HUB_VERSION=`curl -w "%{url_effective}\n" -I -L -s -S github.com/github/hub/releases/latest -o /dev/null | awk -F'releases/tag/v' '{ print $2 }'`; curl "https://github.com/github/hub/releases/download/v$HUB_VERSION/hub-$HUB_DIST-$HUB_VERSION.tgz" -L | tar xvz && sudo ./hub-$HUB_DIST-$HUB_VERSION/install && rm -r ./hub-$HUB_DIST-$HUB_VERSION
 
             hub release create -m "Version ${VERSION}" v${VERSION}
-
-            export HOMEBREW_URL="https://github.com/rhyeal/aws-rotate-iam-keys/archive/v${VERSION}.tar.gz"
       - run:
           name: Update Homebrew Formula
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
+            export HOMEBREW_URL="https://github.com/rhyeal/aws-rotate-iam-keys/archive/v${VERSION}.tar.gz"
             sleep 5s # make sure the URL is there
 
             wget $HOMEBREW_URL -O aws-rotate-iam-keys-${VERSION}.tar.gz
