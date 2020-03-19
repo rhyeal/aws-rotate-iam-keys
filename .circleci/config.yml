@@ -112,6 +112,9 @@ jobs:
           at: ~/repo
       - aws-cli/install
       - add_ssh_keys
+      - run:
+          name: add ssh key to known hosts
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh
       - *setup_disclaimer
       - run:
           name: Release the .deb package
@@ -119,7 +122,7 @@ jobs:
             # let's grab that signing key now
             aws s3 cp s3://rhyeal-ppa-signing-keys/my_secret_signing_key.asc ~/my_secret_signing_key.asc
             gpg --import ~/my_secret_signing_key.asc
-            
+
             export VERSION=$(head -1 $(pwd)/VERSION)
             CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
             sudo apt-get -y install devscripts build-essential dh-make debhelper
@@ -148,6 +151,9 @@ jobs:
       - aws-cli/install
       - add_ssh_keys
       - *setup_disclaimer
+      - run:
+          name: add ssh key to known hosts
+          command: mkdir -p ~/.ssh/ && ssh-keyscan -H github.com >> ~/.ssh
       - run:
           name: Tag new release
           command: |
