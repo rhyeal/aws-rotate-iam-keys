@@ -117,6 +117,7 @@ jobs:
           name: Release the .deb package
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
+            sudo apt-get -y install devscripts build-essential dh-make debhelper
             dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
             cp dist/debian/changelog src/debian/changelog
             rm -rf dist
@@ -143,7 +144,7 @@ jobs:
       - add_ssh_keys
       - *setup_disclaimer
       - run:
-          name: Tag new release & Homebrew Update
+          name: Tag new release
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
             #git tag -a v${VERSION} -m "Version ${VERSION}"
@@ -155,7 +156,10 @@ jobs:
             hub release create -m "Version ${VERSION}" v${VERSION}
 
             export HOMEBREW_URL="https://github.com/rhyeal/aws-rotate-iam-keys/archive/v${VERSION}.tar.gz"
-
+      - run:
+          name: Update Homebrew Formula
+          command: |
+            export VERSION=$(head -1 $(pwd)/VERSION)
             sleep 5s # make sure the URL is there
 
             wget $HOMEBREW_URL -O aws-rotate-iam-keys-${VERSION}.tar.gz
