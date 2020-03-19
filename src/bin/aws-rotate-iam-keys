@@ -57,7 +57,7 @@ while true; do
       echo "AWS Rotate IAM Keys (c) 2018+ Adam Link."
       echo "Licensed under the GNU General Public License."
       echo "Thanks to all the contributors!"
-      echo "version <<VERSION>>"
+      echo "version <%VERSION%>"
       exit 0
       ;;
     --help|-h)

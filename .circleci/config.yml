@@ -64,7 +64,7 @@ jobs:
             mkdir -p dist
             # copy in the src and swap the versions
             cp -r src/** dist/
-            sed "s/<<VERSION>>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
+            sed "s/<%VERSION%>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
 
             CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
 
