@@ -116,6 +116,10 @@ jobs:
       - run:
           name: Release the .deb package
           command: |
+            # let's grab that signing key now
+            aws s3 cp s3://rhyeal-ppa-signing-keys/my_secret_signing_key.asc ~/my_secret_signing_key.asc
+            gpg --import ~/my_secret_signing_key.asc
+            
             export VERSION=$(head -1 $(pwd)/VERSION)
             CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
             sudo apt-get -y install devscripts build-essential dh-make debhelper
