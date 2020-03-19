@@ -17,9 +17,9 @@ mkdir -p dist
 cp -r src/** dist/
 sed "s/<<VERSION>>/$VERSION/g" src/bin/aws-rotate-iam-keys > dist/bin/aws-rotate-iam-keys
 
-CHANGES="aws-rotate-iam-keys_$1_source.changes"
+CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
 # make the homebrew zip file
-zip -r aws-rotate-iam-keys_$VERSION.zip src
+zip -r aws-rotate-iam-keys_${VERSION}.zip dist
 
 cd dist
 
@@ -30,13 +30,13 @@ mv debian DEBIAN
 envsubst < DEBIAN/control-debian > DEBIAN/control
 
 # make the Debian .deb
-dpkg-deb --build . ../aws-rotate-iam-keys.$VERSION.deb
+dpkg-deb --build . ../aws-rotate-iam-keys.${VERSION}.deb
 
 rm DEBIAN/control
 mv DEBIAN debian
 envsubst < debian/control-ubuntu > debian/control
 
-DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa
+DEBEMAIL="Adam Link <aws-rotate-iam-keys@rhyeal.com>" DEBFULLNAME="Adam Link" debuild -S -sa -us -uc
 cd ..
 dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
 cp dist/debian/changelog src/debian/changelog

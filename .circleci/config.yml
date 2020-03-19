@@ -29,7 +29,7 @@ references:
     run:
       name: set up repo
       command: |
-        echo "export TEMPLATE_DISCLAIMER='This is an auto-generated file. Please make changes to the file with .template. in the name.' >> $BASH_ENV
+        echo "export TEMPLATE_DISCLAIMER='This is an auto-generated file. Please make changes to the file with .template. in the name.'" >> $BASH_ENV
 
 jobs:
   checkout_code:
