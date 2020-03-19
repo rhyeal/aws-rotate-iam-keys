@@ -1,12 +1,13 @@
 =begin
 This is an auto-generated file. Please make changes to the file with .template. in the name.
+Hint: Look in the project root folder for the template file
 =end
 
 class AwsRotateIamKeys < Formula
   desc "Automatically rotate your IAM keys daily"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.7.tar.gz"
-  sha256 "da2da52c949aaa4d51363664d7e40ae2fcd515b7ae3b72e6e5ba445e01acfa7c"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.7.1.tar.gz"
+  sha256 "d64ebadbc3bca14034cc21fb367b1cc859b5532eaf7aa12915ccad7b78df6728"
   depends_on "awscli" => :recommended
   depends_on "gnu-getopt"
   depends_on "jq"
