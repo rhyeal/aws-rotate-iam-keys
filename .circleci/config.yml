@@ -117,6 +117,7 @@ jobs:
           name: Release the .deb package
           command: |
             export VERSION=$(head -1 $(pwd)/VERSION)
+            CHANGES="aws-rotate-iam-keys_${VERSION}_source.changes"
             sudo apt-get -y install devscripts build-essential dh-make debhelper
             dput ppa:rhyeal/aws-rotate-iam-keys $CHANGES
             cp dist/debian/changelog src/debian/changelog
