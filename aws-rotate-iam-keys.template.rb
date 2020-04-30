@@ -21,11 +21,15 @@ class AwsRotateIamKeys < Formula
   devel do
     Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '../'))) do
       url %x{git config --local --get remote.origin.url | tr -d '\n'}, using: :git, branch: "develop"
-      version %x{git describe develop --always | tr -d '\n'}
+      version "head"
     end
   end
 
   def install
+    version = File.read('VERSION')
+    code = File.read("src/bin/aws-rotate-iam-keys")
+    code = code.gsub(/<%VERSION%>/, version)
+    File.open("src/bin/aws-rotate-iam-keys", "w") {|file| file.puts code}
     bin.install "src/bin/aws-rotate-iam-keys"
     (buildpath/"aws-rotate-iam-keys").write <<~EOS
       --profile default
