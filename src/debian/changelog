@@ -2,6 +2,12 @@ aws-rotate-iam-keys (0.9.8) bionic; urgency=medium
 
   * See release notes on GitHub
 
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Sat, 13 Jun 2020 06:30:45 +0000
+
+aws-rotate-iam-keys (0.9.8) bionic; urgency=medium
+
+  * See release notes on GitHub
+
  -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Thu, 30 Apr 2020 05:51:43 +0000
 
 aws-rotate-iam-keys (0.9.7.1) bionic; urgency=medium
