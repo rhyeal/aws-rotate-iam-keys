@@ -6,8 +6,8 @@ Hint: Look in the project root folder for the template file
 class AwsRotateIamKeys < Formula
   desc "Automatically rotate your IAM keys daily"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.8.tar.gz"
-  sha256 "33ae66f377ca8ef21ed9aacb4a2186061f19c07f80b342b99aa64d6cb86933ba"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.8.1.tar.gz"
+  sha256 "01dc4c24a4cd8218c8283aec4fea6109b54fc1c256c555e6851142080cd84b0b"
   depends_on "awscli" => :recommended
   depends_on "gnu-getopt"
   depends_on "jq"
@@ -21,7 +21,7 @@ class AwsRotateIamKeys < Formula
   devel do
     Dir.chdir(File.expand_path(File.join(File.dirname(__FILE__), '../'))) do
       url %x{git config --local --get remote.origin.url | tr -d '\n'}, using: :git, branch: "develop"
-      version %x{git describe develop --always | tr -d '\n'}
+      version "head"
     end
   end
 
