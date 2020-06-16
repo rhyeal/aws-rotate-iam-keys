@@ -51,7 +51,7 @@ jobs:
           name: Change the website
           command: |
             # version swap the website
-            VERSION=$(head -1 $(pwd)/VERSION)
+            export VERSION=$(head -1 $(pwd)/VERSION)
             sudo apt-get -y install gettext-base
             envsubst < website/index.template.html > website/index.html
             aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete

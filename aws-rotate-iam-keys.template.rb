@@ -26,6 +26,10 @@ class AwsRotateIamKeys < Formula
   end
 
   def install
+    version = File.read('VERSION')
+    code = File.read("src/bin/aws-rotate-iam-keys")
+    code = code.gsub(/<%VERSION%>/, version)
+    File.open("src/bin/aws-rotate-iam-keys", "w") {|file| file.puts code}
     bin.install "src/bin/aws-rotate-iam-keys"
     (buildpath/"aws-rotate-iam-keys").write <<~EOS
       --profile default
