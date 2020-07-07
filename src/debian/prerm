@@ -28,5 +28,9 @@ else
 fi
 
 if [[ "$MY_USER" != "" ]]; then # if this is being run as a user, remove this line from cron tab
-  crontab -u $MY_USER -l | grep -v '/usr/bin/aws-rotate-iam-keys --profile default'  | crontab -u $MY_USER -
+  SCRIPT_PATH=$(which aws-rotate-iam-keys 2>/dev/null || echo /usr/bin/aws-rotate-iam-keys)
+  IS_ENABLED=$(crontab -u $MY_USER -l | fgrep $SCRIPT_PATH | wc -l)
+  if [[ "$IS_ENABLED" == 0 ]]; then
+    crontab -u $MY_USER -l | grep -v $SCRIPT_PATH --profile default  | crontab -u $MY_USER -
+  fi
 fi
