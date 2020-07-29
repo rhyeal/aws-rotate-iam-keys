@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-MY_USER=""
-
 echo "Trying to find a user name for the cron job"
 echo "ps: $(ps -o user= -p $$ | awk '{print $1}')"
 echo "logname: $(logname)"
@@ -12,21 +10,25 @@ echo "SUDO_USER: $SUDO_USER"
 
 # Let's cycle through to find a non blank and non-root username
 if [[ "$(ps -o user= -p $$ | awk '{print $1}')" != "root" && "$(ps -o user= -p $$ | awk '{print $1}')" != "" ]]; then
-        MY_USER=$(ps -o user= -p $$ | awk '{print $1}')
+  MY_USER=$(ps -o user= -p $$ | awk '{print $1}')
 elif [[ "$(logname)" != "root" && "$(logname)" != "" ]]; then
-        MY_USER=$(logname)
+  MY_USER=$(logname)
 elif [[ "$(whoami)" != "root" && "$(whoami)" != "" ]]; then
-        MY_USER=$(whoami)
+  MY_USER=$(whoami)
 elif [[ "$(id -u -n)" != "root" && "$(id -u -n)" != "" ]]; then
-        MY_USER=$(id -u -n)
+  MY_USER=$(id -u -n)
 elif [[ "$USER" != "root" && "$USER" != "" ]]; then
-        MY_USER=$USER
+  MY_USER=$USER
 elif [[ "$SUDO_USER" != "root" && "$SUDO_USER" != "" ]]; then
-        MY_USER=$SUDO_USER
+  MY_USER=$SUDO_USER
 else
   echo "Cannot find the username! Skipping the crontab removal"
 fi
 
 if [[ "$MY_USER" != "" ]]; then # if this is being run as a user, remove this line from cron tab
-  crontab -u $MY_USER -l | grep -v '/usr/bin/aws-rotate-iam-keys --profile default'  | crontab -u $MY_USER -
+  SCRIPT_PATH=$(which aws-rotate-iam-keys 2>/dev/null || echo /usr/bin/aws-rotate-iam-keys)
+  IS_ENABLED=$(crontab -u $MY_USER -l | fgrep $SCRIPT_PATH | wc -l)
+  if [[ "$IS_ENABLED" == 0 ]]; then
+    crontab -u $MY_USER -l | grep -v $SCRIPT_PATH --profile default  | crontab -u $MY_USER -
+  fi
 fi
