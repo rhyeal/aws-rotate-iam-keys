@@ -6,8 +6,8 @@ Hint: Look in the project root folder for the template file
 class AwsRotateIamKeys < Formula
   desc "Automatically rotate your IAM keys daily"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.8.2.tar.gz"
-  sha256 "7461333e174388e7356418c651f4db25f7546548c0b032d44c4c49cfd7bfd9fc"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys/archive/v0.9.8.3.tar.gz"
+  sha256 "98a1239a4000bf718a438946b1004fbb9d3fcab3d528dd34013e78af8800acb7"
   depends_on "awscli" => :recommended
   depends_on "gnu-getopt"
   depends_on "jq"
