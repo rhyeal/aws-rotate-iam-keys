@@ -241,6 +241,20 @@ writes output to a file in the `/tmp` directory matching the job name, e.g.
 /tmp/homebrew.mxcl.aws-rotate-iam-keys.log
 ```
 
+If you do wish to use `cron`, you still can, however, bare in mind that if your machine is off at the specified time, it will be passed over. 
+
+This one-liner will scan your `.credentials` file upon running and pass all account names to `aws-rotate-iam-keys`.
+
+```
+. /etc/profile; /usr/bin/sed -n '1,2d;s/^\[\(.*\)\]$/\1/p' ~/.aws/credentials | /usr/bin/xargs -I{} /usr/local/bin/aws-rotate-iam-keys --profile {}
+```
+
+You can also specify a file to log the output too if this helps.
+
+```
+. /etc/profile; /usr/bin/sed -n '1,2d;s/^\[\(.*\)\]$/\1/p' ~/.aws/credentials | /usr/bin/xargs -I{} /usr/local/bin/aws-rotate-iam-keys --profile {} >~/.aws/key_rotation.log 2>&1
+```
+
 ### Other Linux
 
 Add a cron job to run AWS Rotate IAM Keys nightly. Open your crontab by typing:
