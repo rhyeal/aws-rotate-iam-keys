@@ -121,6 +121,10 @@ export AWS_DEFAULT_REGION=$DEFAULT_REGION
 # This should only be relevant when run from a terminal, i.e. when stdout is a tty
 export AWS_PAGER=""
 
+# Clear AWS session token to avoid issues with tools like awsume, which export
+# AWS env vars (probably only relevant when run interactively from a terminal)
+export AWS_SESSION_TOKEN=""
+
 echo "Verifying credentials"
 KEY_COUNT=$(aws iam list-access-keys --output json | jq '.AccessKeyMetadata | length' || exit 1)
 if [[ "$KEY_COUNT" -gt "1" ]]; then
