@@ -10,8 +10,8 @@ If (Get-ScheduledTask | Where-Object {$_.TaskName -like "AWS Rotate IAM Keys" })
     Write-Host "Cronjob already installed."
 } Else {
     $folder = Split-Path $MyInvocation.MyCommand.Path -Parent
-    $hour = Get-Random -Maximum 6 -Minimum 2
-    $minute = Get-Random -Maximum 60
+    $hour = (Get-Random -Maximum 6 -Minimum 2).toString("d2")
+    $minute = (Get-Random -Maximum 60).toString("d2")
 
     $createTask = "schtasks /create /f /tn `"AWS Rotate IAM Keys`" /tr `"Powershell.exe -ExecutionPolicy Bypass -WindowStyle Hidden -nologo -noninteractive '$folder\aws-rotate-iam-keys.ps1' -profile default`" /sc daily /st 0$($hour):$minute"
     Invoke-Expression $createTask
