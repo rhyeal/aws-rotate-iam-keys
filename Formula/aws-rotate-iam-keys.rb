@@ -20,6 +20,7 @@ class AwsRotateIamKeys < Formula
 
   def install
     bin.install "src/bin/aws-rotate-iam-keys"
+    inreplace "#{bin}/aws-rotate-iam-keys", "<%VERSION%>", version
     (buildpath/"aws-rotate-iam-keys").write <<~EOS
       --profile default
     EOS
