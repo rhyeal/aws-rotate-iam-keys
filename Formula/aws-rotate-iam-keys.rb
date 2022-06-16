@@ -60,7 +60,7 @@ class AwsRotateIamKeys < Formula
       <key>EnvironmentVariables</key>
       <dict>
         <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <string>#{bin}:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
       </dict>
       <key>Label</key>
       <string>#{plist_name}</string>
