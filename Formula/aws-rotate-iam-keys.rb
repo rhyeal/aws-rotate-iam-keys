@@ -50,7 +50,7 @@ class AwsRotateIamKeys < Formula
     EOS
   end
 
-  plist_options :startup => false
+  service.require_root :startup => false
 
   def plist; <<~EOS
     <?xml version="1.0" encoding="UTF-8"?>
