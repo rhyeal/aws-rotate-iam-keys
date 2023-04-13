@@ -12,6 +12,10 @@ class AwsRotateIamKeys < Formula
   depends_on "jq"
   depends_on "awscli" => :recommended
 
+  head do
+    url "https://github.com/rhyeal/aws-rotate-iam-keys.git"
+  end
+
   def install
     bin.install "src/bin/aws-rotate-iam-keys"
     (buildpath/"aws-rotate-iam-keys").write <<~EOS
@@ -45,11 +49,12 @@ class AwsRotateIamKeys < Formula
   end
 
   def log_path
-    var/"log/#{name}.log"
+    var/"log/#{plist_name}.log"
   end
   service do
-    run opt_bin/"aws-rotate-iam-keys"
+    run ["bash", "-c", "if ! curl -s www.google.com; then sleep 60; fi; cp /dev/null #{f.log_path} ; ( grep -E ^[[:space:]]*- ~/.aws-rotate-iam-keys || cat #{etc}/aws-rotate-iam-keys ) | while read line; do #{opt_bin}/aws-rotate-iam-keys $line; done"]
     run_type :cron
+    run_at_load false
     cron "23 3 * * *"
     environment_variables PATH: std_service_path_env
     log_path f.log_path
