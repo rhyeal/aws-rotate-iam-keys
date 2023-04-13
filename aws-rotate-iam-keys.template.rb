@@ -54,7 +54,7 @@ class AwsRotateIamKeys < Formula
   service do
     run ["bash", "-c", "if ! curl -s www.google.com; then sleep 60; fi; cp /dev/null #{f.log_path} ; ( grep -E ^[[:space:]]*- ~/.aws-rotate-iam-keys || cat #{etc}/aws-rotate-iam-keys ) | while read line; do #{opt_bin}/aws-rotate-iam-keys $line; done"]
     run_type :cron
-    run_at_load false
+    run_at_load true
     cron "23 3 * * *"
     environment_variables PATH: std_service_path_env
     log_path f.log_path
