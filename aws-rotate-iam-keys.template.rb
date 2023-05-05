@@ -49,7 +49,7 @@ class AwsRotateIamKeys < Formula
   end
 
   def log_path
-    var/"log/#{plist_name}.log"
+    "/tmp/#{plist_name}.log"
   end
   service do
     run ["bash", "-c", "if ! curl -s www.google.com; then sleep 60; fi; cp /dev/null #{f.log_path} ; ( grep -E ^[[:space:]]*- ~/.aws-rotate-iam-keys || cat #{etc}/aws-rotate-iam-keys ) | while read line; do #{opt_bin}/aws-rotate-iam-keys $line; done"]

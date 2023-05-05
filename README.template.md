@@ -235,10 +235,10 @@ aws iam list-access-keys --profile default
 
 If it hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`. If you can't find anything useful, the launchd job also
-writes output to a file in the `$(brew --prefix)/var/log` directory matching the job name, e.g.
+writes output to a file in the `/tmp` directory matching the job name, e.g.
 
 ```sh
-cat /opt/homebrew/var/log/homebrew.mxcl.aws-rotate-iam-keys.log
+cat /tmp/homebrew.mxcl.aws-rotate-iam-keys.log
 ```
 
 ### Other Linux
@@ -251,7 +251,7 @@ EDITOR=nano crontab -e
 
 Copy and paste the following line into the end of the crontab file:
 
-```
+```cron
 33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily
 ```
 
