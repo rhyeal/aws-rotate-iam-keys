@@ -208,6 +208,8 @@ cp /usr/local/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
 nano ~/.aws-rotate-iam-keys
 ```
 
+Note: if you are using Apple Silicon: `cp /opt/homebrew/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys`
+
 The `aws-rotate-iam-keys` command is invoked once daily for each line in the
 configuration. Each line contains a single set of command line options. If you
 need to invoke the command multiple times to rotate your keys, you must add
