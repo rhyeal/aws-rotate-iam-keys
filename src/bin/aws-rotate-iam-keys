@@ -97,7 +97,8 @@ for i in "${!PROFILES_ARR[@]}"; do
   SECRET_ACCESS_KEY=$(aws configure get ${PROFILES_ARR[i]}.aws_secret_access_key 2>/dev/null || echo "")
   DEFAULT_REGION=$(aws configure get ${PROFILES_ARR[i]}.region 2>/dev/null || echo "")
   if [[ -z "$ACCESS_KEY_ID" ]] || [[ -z "$SECRET_ACCESS_KEY" ]]; then
-    echo "Could not find keys for profile ${PROFILES_ARR[i]}. Ensure you have a profile set up using 'aws configure'." >&2
+    echo "Could not find access key or secret access key for profile ${PROFILES_ARR[i]}." >&2
+    aws configure list --profile  ${PROFILES_ARR[i]} >&2
     exit 1
   fi
   ACCESS_KEY_IDS+=($ACCESS_KEY_ID)
