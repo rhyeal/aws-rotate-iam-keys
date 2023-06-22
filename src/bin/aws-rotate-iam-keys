@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+VERSION="0.9.8.4"
+
 # Log to syslog if output streams not attached to a terminal (cron, launchd)
 if ! test -t 1 && ! test -t 2; then
   exec 1> >(tee >(logger -t $(basename $0))) 2>&1
@@ -57,7 +59,7 @@ while true; do
       echo "AWS Rotate IAM Keys (c) 2018+ Adam Link."
       echo "Licensed under the GNU General Public License."
       echo "Thanks to all the contributors!"
-      echo "version <%VERSION%>"
+      echo "version ${VERSION}"
       exit 0
       ;;
     --help|-h)
