@@ -40,12 +40,13 @@ sudo apt-get install aws-rotate-iam-keys
 
 ### MacOS
 
-Requires [Homebrew](https://brew.sh/) to install. I am hoping to be included in
-Homebrew Core soon!
+Requires [Homebrew](https://brew.sh/) to install. It is currently recommended to
+install the latest version from GitHub using `--HEAD` as the stable release is
+outdated.
 
 ```
 brew tap rhyeal/aws-rotate-iam-keys https://github.com/rhyeal/aws-rotate-iam-keys
-brew install aws-rotate-iam-keys
+brew install --HEAD aws-rotate-iam-keys
 ```
 
 Note: this automatically installs/upgrades the `awscli` homebrew package and its
@@ -55,6 +56,9 @@ dependent packages. You can skip this using `brew install aws-rotate-iam-keys --
 rotation. See [Configuration](#configuration).
 
 ### Debian
+
+The latest stable Debian package is outdated due to issues with the build
+process. To install the latest version, see instructions for "Other Linux".
 
 ```
 wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.8.4.deb -O aws-rotate-iam-keys.deb
@@ -88,20 +92,20 @@ keys on each run thereafter.
 The minimal needed permissions for the AWS user are:
 ```
 {
-	"Version": "2012-10-17",
-	"Statement": [
-		{
-			"Effect": "Allow",
-			"Action": [
-				"iam:ListAccessKeys",
-				"iam:CreateAccessKey",
-				"iam:DeleteAccessKey"
-			],
-			"Resource": [
-				"arn:aws:iam::*:user/${aws:username}"
-			]
-		}
-	]
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListAccessKeys",
+        "iam:CreateAccessKey",
+        "iam:DeleteAccessKey"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:user/${aws:username}"
+      ]
+    }
+  ]
 }
 ```
 
