@@ -188,14 +188,14 @@ The Homebrew formula installs a launchd job which can be used to automatically
 rotate your IAM keys daily. Unfortunately, Homebrew forumlae cannot
 automatically start launchd jobs, so you must manually enable it:
 
-```
+```sh
 brew services start aws-rotate-iam-keys
 ```
 
 A default/global configuration file for the launchd job is installed to:
 
-```
-/usr/local/etc/aws-rotate-iam-keys
+```sh
+$(brew --prefix)/etc/aws-rotate-iam-keys
 ```
 
 This default configuration rotates keys for your default AWS profile only.
@@ -203,8 +203,8 @@ To customise the configuration, for example to rotate multiple keys, create a
 copy of this file named `.aws-rotate-iam-keys` in your home directory and edit
 it, e.g.
 
-```
-cp /usr/local/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
+```sh
+cp $(brew --prefix)/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
 nano ~/.aws-rotate-iam-keys
 ```
 
@@ -221,7 +221,7 @@ multiple lines to the configuration, e.g.
 If you do customise the configuration, you can test that it works by restarting
 the service:
 
-```
+```sh
 brew services restart aws-rotate-iam-keys
 ```
 
@@ -229,7 +229,7 @@ That's it. Your keys should have been rotated, and will now be rotated every
 day for you. You can use the AWS CLI to check that your access keys have been
 rotated as expected, e.g.
 
-```
+```sh
 aws iam list-access-keys --profile default
 ```
 
@@ -237,8 +237,8 @@ If it hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`. If you can't find anything useful, the launchd job also
 writes output to a file in the `/tmp` directory matching the job name, e.g.
 
-```
-/tmp/homebrew.mxcl.aws-rotate-iam-keys.log
+```sh
+cat /tmp/homebrew.mxcl.aws-rotate-iam-keys.log
 ```
 
 ### Other Linux
@@ -251,7 +251,7 @@ EDITOR=nano crontab -e
 
 Copy and paste the following line into the end of the crontab file:
 
-```
+```cron
 33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily
 ```
 
