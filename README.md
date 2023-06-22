@@ -30,6 +30,10 @@ be able to create a new key when rotating your access keys.
 
 AWS Rotate IAM Keys is supported by all major platforms.
 
+**Note:** build process is currently broken, so release packages are outdated.
+To install a recent version please use the `--HEAD` option with Homebrew on
+MacOS, and install from source on Debian/Ubuntu (see "Other Linux").
+
 ### Ubuntu
 
 ```
@@ -40,13 +44,11 @@ sudo apt-get install aws-rotate-iam-keys
 
 ### MacOS
 
-Requires [Homebrew](https://brew.sh/) to install. It is currently recommended to
-install the latest version from GitHub using `--HEAD` as the stable release is
-outdated.
+Requires [Homebrew](https://brew.sh/) to install.
 
 ```
 brew tap rhyeal/aws-rotate-iam-keys https://github.com/rhyeal/aws-rotate-iam-keys
-brew install --HEAD aws-rotate-iam-keys
+brew install aws-rotate-iam-keys
 ```
 
 Note: this automatically installs/upgrades the `awscli` homebrew package and its
@@ -56,9 +58,6 @@ dependent packages. You can skip this using `brew install aws-rotate-iam-keys --
 rotation. See [Configuration](#configuration).
 
 ### Debian
-
-The latest stable Debian package is outdated due to issues with the build
-process. To install the latest version, see instructions for "Other Linux".
 
 ```
 wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.8.4.deb -O aws-rotate-iam-keys.deb
