@@ -188,14 +188,14 @@ The Homebrew formula installs a launchd job which can be used to automatically
 rotate your IAM keys daily. Unfortunately, Homebrew forumlae cannot
 automatically start launchd jobs, so you must manually enable it:
 
-```
+```sh
 brew services start aws-rotate-iam-keys
 ```
 
 A default/global configuration file for the launchd job is installed to:
 
-```
-/usr/local/etc/aws-rotate-iam-keys
+```sh
+$(brew --prefix)/etc/aws-rotate-iam-keys
 ```
 
 This default configuration rotates keys for your default AWS profile only.
@@ -203,8 +203,8 @@ To customise the configuration, for example to rotate multiple keys, create a
 copy of this file named `.aws-rotate-iam-keys` in your home directory and edit
 it, e.g.
 
-```
-cp /usr/local/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
+```sh
+cp $(brew --prefix)/etc/aws-rotate-iam-keys ~/.aws-rotate-iam-keys
 nano ~/.aws-rotate-iam-keys
 ```
 
@@ -221,7 +221,7 @@ multiple lines to the configuration, e.g.
 If you do customise the configuration, you can test that it works by restarting
 the service:
 
-```
+```sh
 brew services restart aws-rotate-iam-keys
 ```
 
@@ -229,7 +229,7 @@ That's it. Your keys should have been rotated, and will now be rotated every
 day for you. You can use the AWS CLI to check that your access keys have been
 rotated as expected, e.g.
 
-```
+```sh
 aws iam list-access-keys --profile default
 ```
 
@@ -237,8 +237,8 @@ If it hasn't worked, check the MacOS system log for error entries matching
 `aws-rotate-iam-keys`. If you can't find anything useful, the launchd job also
 writes output to a file in the `/tmp` directory matching the job name, e.g.
 
-```
-/tmp/homebrew.mxcl.aws-rotate-iam-keys.log
+```sh
+cat /tmp/homebrew.mxcl.aws-rotate-iam-keys.log
 ```
 
 ### Other Linux
@@ -251,7 +251,7 @@ EDITOR=nano crontab -e
 
 Copy and paste the following line into the end of the crontab file:
 
-```
+```cron
 33 4 * * * /usr/bin/aws-rotate-iam-keys --profile default >/dev/null #rotate AWS keys daily
 ```
 
@@ -288,23 +288,3 @@ colors.
 ### Get In Touch
 
 Did you open a PR or find a bug and more than a few days have passed? Hit me up on email at **awsRotateKeys@rhyeal.com** and I'll address the issue promptly!
-
-## Checksums
-
-### Ubuntu/Debian
-
-```
-echo c0375ee70312c3b3b7935ee9cdf1bfd9 aws-rotate-iam-keys.0.9.8.4.deb | md5sum --check -
-```
-
-### MacOS
-
-Homebrew gets the release zip of the entire repo: `SHA256 47912ee7c1adb93ac602d54e6689d2609c00166de4a46cd00f2a42bf37d6921b`
-
-### Windows
-
-PowerShell script file: `MD5 7b78cc773ac69f55dba4caca4de6b437  Windows/aws-rotate-iam-keys.ps1`
-
-## Changes to this file
-
-This is an auto-generated file. Please make changes to the file with .template. in the name.
