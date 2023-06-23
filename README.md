@@ -57,15 +57,6 @@ dependent packages. You can skip this using `brew install aws-rotate-iam-keys --
 ***IMPORTANT:*** You must install your own scheduled job for automated key
 rotation. See [Configuration](#configuration).
 
-### Debian
-
-```
-wget -q https://github.com/rhyeal/aws-rotate-iam-keys/raw/master/aws-rotate-iam-keys.0.9.8.4.deb -O aws-rotate-iam-keys.deb
-sudo dpkg -i aws-rotate-iam-keys.deb
-sudo apt-get install -f
-rm aws-rotate-iam-keys.deb # optional file clean up
-```
-
 ### Other Linux
 
 ```
