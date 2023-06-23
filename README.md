@@ -70,8 +70,8 @@ rotation. See [Configuration](#configuration).
 
 ### Windows
 
-[Click here](https://aws-rotate-iam-keys.com/aws-rotate-iam-keys.ps1) to
-download the executable PowerShell script.
+[Click here](https://raw.githubusercontent.com/rhyeal/aws-rotate-iam-keys/master/Windows/aws-rotate-iam-keys.ps1)
+to download the executable PowerShell script.
 
 Simply place this in any directory and then run it. It will install the
 Scheduled Task to rotate your keys nightly upon first run and will rotate your
