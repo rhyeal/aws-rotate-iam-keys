@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION="0.9.8.4"
+VERSION="0.9.8.5"
 
 # Log to syslog if output streams not attached to a terminal (cron, launchd)
 if ! test -t 1 && ! test -t 2; then
