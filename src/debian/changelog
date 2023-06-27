@@ -1,3 +1,9 @@
+aws-rotate-iam-keys (0.9.8.5) jammy; urgency=medium
+
+  * See release notes on GitHub
+
+ -- Adam Link <aws-rotate-iam-keys@rhyeal.com>  Tue, 27 Jun 2023 14:26:15 +0000
+
 aws-rotate-iam-keys (0.9.8.4) bionic; urgency=medium
 
   * See release notes on GitHub
