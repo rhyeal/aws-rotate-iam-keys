@@ -1,7 +1,7 @@
 class AwsRotateIamKeys < Formula
   desc "Automatically rotate your IAM keys daily"
   homepage "https://aws-rotate-iam-keys.com"
-  url "https://github.com/rhyeal/aws-rotate-iam-keys.git", tag: "v0.9.8.4"
+  url "https://github.com/rhyeal/aws-rotate-iam-keys.git", tag: "v0.9.8.5"
   depends_on "gnu-getopt"
   depends_on "jq"
   depends_on "awscli" => :recommended
