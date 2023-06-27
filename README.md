@@ -32,7 +32,7 @@ AWS Rotate IAM Keys is supported by all major platforms.
 
 **Note:** build process is currently broken, so release packages are outdated.
 To install a recent version please use the `--HEAD` option with Homebrew on
-MacOS, and install from source on Ubuntu (see "Other Linux").
+MacOS, and install from source on Debian/Ubuntu (see "Other Linux").
 
 ### Ubuntu
 
@@ -146,11 +146,11 @@ have **different** access and secret keys in your `~/.aws/credentials` file.
 
 For some operating systems, you need to install your own scheduled job as not
 all package managers allow programs to create their own scheduled jobs. Also,
-the scheduled job installed on Ubuntu and Windows only rotates keys for your
-default profile. If you need to rotate keys for other profiles you will need to
-edit the job or add more jobs.
+the scheduled job installed on Ubuntu, Debian and Windows only rotates keys for
+your default profile. If you need to rotate keys for other profiles you will
+need to edit the job or add more jobs.
 
-### Ubuntu
+### Ubuntu/Debian
 
 A default job was added to your crontab during installation. This job rotates
 keys for your default profile. To rotate keys for other profiles you will need
