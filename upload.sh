@@ -7,7 +7,7 @@ echo "Uploading version $VERSION..."
 
 echo "Select AWS profile..."
 PROFILES=$(grep '^\[profile' ~/.aws/config | awk '{print $NF}' | sed 's/]//' | sort)
-select PROFILE in $PROFILES; do break; done
+select PROFILE in default $PROFILES; do break; done
 
 echo "Updating S3 website..."
 aws s3 sync ./website s3://aws-rotate-iam-keys.com --delete --acl public-read --profile $PROFILE
