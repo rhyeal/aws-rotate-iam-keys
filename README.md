@@ -30,10 +30,6 @@ be able to create a new key when rotating your access keys.
 
 AWS Rotate IAM Keys is supported by all major platforms.
 
-**Note:** build process is currently broken, so release packages are outdated.
-To install a recent version please use the `--HEAD` option with Homebrew on
-MacOS, and install from source on Debian/Ubuntu (see "Other Linux").
-
 ### Ubuntu
 
 ```
